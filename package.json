@@ -2,7 +2,7 @@
   "name": "primitive-subgraph",
   "license": "UNLICENSED",
   "scripts": {
-    "codegen": "graph codegen",
+    "codegen": "graph codegen --output-dir src/types/",
     "build": "graph build",
     "deploy": "graph deploy --node https://api.studio.thegraph.com/deploy/ primitive-subgraph",
     "create-local": "graph create --node http://localhost:8020/ primitive-subgraph",

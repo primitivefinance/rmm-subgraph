@@ -1,0 +1,87 @@
+specVersion: 0.0.2
+schema:
+  file: schema.graphql
+dataSources:
+  - kind: ethereum/contract
+    name: PrimitiveFactory
+    network: rinkeby
+    source:
+      address: "0x5cA2D631a37B21E5de2BcB0CbB892D723A96b068"
+      abi: PrimitiveFactory
+      startBlock: 10372657
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.5
+      language: wasm/assemblyscript
+      file: PrimitiveFactory/PrimitiveFactory.wasm
+      entities:
+        - Engine
+        - Token
+      abis:
+        - name: PrimitiveFactory
+          file: PrimitiveFactory/abis/PrimitiveFactory.json
+        - name: ERC20
+          file: PrimitiveFactory/abis/ERC20.json
+      eventHandlers:
+        - event: DeployEngine(indexed address,indexed address,indexed address,address)
+          handler: handleDeployEngine
+  - kind: ethereum/contract
+    name: PrimitiveManager
+    network: rinkeby
+    source:
+      address: "0x54522dA62a15225C95b01bD61fF58b866C50471f"
+      abi: PrimitiveManager
+      startBlock: 10372657
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.5
+      language: wasm/assemblyscript
+      file: PrimitiveManager/PrimitiveManager.wasm
+      entities:
+        - Pool
+        - Token
+      abis:
+        - name: PrimitiveManager
+          file: PrimitiveManager/abis/PrimitiveManager.json
+        - name: PrimitiveEngine
+          file: PrimitiveManager/abis/PrimitiveEngine.json
+        - name: ERC20
+          file: PrimitiveManager/abis/ERC20.json
+      eventHandlers:
+        - event: Create(indexed address,indexed address,indexed
+            bytes32,uint128,uint32,uint32,uint32,uint256)
+          handler: handleCreate
+        - event: Allocate(address,indexed address,indexed address,indexed
+            bytes32,uint256,uint256,uint256,bool)
+          handler: handleAllocate
+        - event: Remove(indexed address,indexed address,indexed bytes32,uint256,uint256,uint256)
+          handler: handleRemove
+templates:
+  - kind: ethereum/contract
+    name: PrimitiveEngine
+    network: rinkeby
+    source:
+      abi: PrimitiveEngine
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.5
+      language: wasm/assemblyscript
+      file: templates/PrimitiveEngine/PrimitiveEngine.wasm
+      entities:
+        - Engine
+        - Token
+        - Pool
+      abis:
+        - name: PrimitiveEngine
+          file: PrimitiveEngine/abis/PrimitiveEngine.json
+        - name: ERC20
+          file: PrimitiveEngine/abis/ERC20.json
+      eventHandlers:
+        - event: Allocate(indexed address,indexed address,indexed bytes32,uint256,uint256,uint256)
+          handler: handleAllocate
+        - event: Remove(indexed address,indexed bytes32,uint256,uint256,uint256)
+          handler: handleRemove
+        - event: Deposit(indexed address,indexed address,uint256,uint256)
+          handler: handleDeposit
+        - event: Swap(indexed address,indexed address,indexed bytes32,bool,uint256,uint256)
+          handler: handleSwap
