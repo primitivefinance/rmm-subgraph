@@ -1,0 +1,63 @@
+type Factory @entity {
+  id: ID!
+  engineCount: BigInt!
+}
+
+type Token @entity {
+  id: ID!
+  symbol: String!
+  name: String!
+  decimals: BigInt!
+  totalSupply: BigInt!
+}
+
+type Pool @entity {
+  id: ID!
+  createdAtTimestamp: Int!
+  createdAtBlockNumber: Int!
+  underlyingToken: Token! 
+  quoteToken: Token!
+  strike: BigInt!
+  strikeInt: Int!
+  sigma: BigInt!
+  sigmaInt: Int!
+  maturity: Int!
+  gamma: String!
+  liquidity: BigInt!
+  liquidityInt: Int!
+  txCount: Int!
+  totalUnderlyingTokens: BigInt!
+  totalUnderlyingInt: Int!
+  totalQuoteTokens: BigInt!
+  totalQuoteInt: Int!
+  liquidityProviderCount: Int!
+}
+
+type Engine @entity {
+  id: ID!
+  poolCount: Int!
+  pools: [Pool!]!
+  underlyingToken: Token! 
+  txCount: Int!
+  quoteToken: Token!
+  createdAtTimestamp: BigInt!
+  createdAtBlockNumber: BigInt!
+}
+
+type Position @entity {
+  id: ID!
+  owner: Bytes!
+  pool: Pool!
+  underlyingToken: Token!
+  quoteToken: Token!
+  liquidity: BigInt!
+  liquidityInt: Int!
+  depositedUnderlyingToken: BigInt!
+  depositedUnderlyingStr: String!
+  depositedQuoteToken: BigInt!
+  depositedQuoteInt: Int!
+  withdrawnUnderlyingToken: BigInt!
+  withdrawnUnderlyingInt: Int!
+  withdrawnQuoteToken: BigInt!
+  withdrawnQuoteInt: Int!
+}
