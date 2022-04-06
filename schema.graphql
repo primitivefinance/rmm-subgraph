@@ -18,18 +18,18 @@ type Pool @entity {
   underlyingToken: Token! 
   quoteToken: Token!
   strike: BigInt!
-  strikeInt: Int!
+  strikeDecimal: BigDecimal!
   sigma: BigInt!
-  sigmaInt: Int!
+  sigmaDecimal: BigDecimal!
   maturity: Int!
-  gamma: String!
+  gamma: BigDecimal!
   liquidity: BigInt!
-  liquidityInt: Int!
+  liquidityDecimal: BigDecimal!
   txCount: Int!
   totalUnderlyingTokens: BigInt!
-  totalUnderlyingInt: Int!
+  totalUnderlyingDecimal: BigDecimal!
   totalQuoteTokens: BigInt!
-  totalQuoteInt: Int!
+  totalQuoteDecimal: BigDecimal!
   liquidityProviderCount: Int!
 }
 
@@ -51,13 +51,13 @@ type Position @entity {
   underlyingToken: Token!
   quoteToken: Token!
   liquidity: BigInt!
-  liquidityInt: Int!
+  liquidityDecimal: BigDecimal!
   depositedUnderlyingToken: BigInt!
-  depositedUnderlyingStr: String!
+  depositedUnderlyingDecimal: BigDecimal!
   depositedQuoteToken: BigInt!
-  depositedQuoteInt: Int!
+  depositedQuoteDecimal: BigDecimal!
   withdrawnUnderlyingToken: BigInt!
-  withdrawnUnderlyingInt: Int!
+  withdrawnUnderlyingDecimal: BigDecimal!
   withdrawnQuoteToken: BigInt!
-  withdrawnQuoteInt: Int!
+  withdrawnQuoteDecimal: BigDecimal!
 }

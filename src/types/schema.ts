@@ -139,18 +139,18 @@ export class Pool extends Entity {
     this.set("underlyingToken", Value.fromString(""));
     this.set("quoteToken", Value.fromString(""));
     this.set("strike", Value.fromBigInt(BigInt.zero()));
-    this.set("strikeInt", Value.fromI32(0));
+    this.set("strikeDecimal", Value.fromBigDecimal(BigDecimal.zero()));
     this.set("sigma", Value.fromBigInt(BigInt.zero()));
-    this.set("sigmaInt", Value.fromI32(0));
+    this.set("sigmaDecimal", Value.fromBigDecimal(BigDecimal.zero()));
     this.set("maturity", Value.fromI32(0));
-    this.set("gamma", Value.fromString(""));
+    this.set("gamma", Value.fromBigDecimal(BigDecimal.zero()));
     this.set("liquidity", Value.fromBigInt(BigInt.zero()));
-    this.set("liquidityInt", Value.fromI32(0));
+    this.set("liquidityDecimal", Value.fromBigDecimal(BigDecimal.zero()));
     this.set("txCount", Value.fromI32(0));
     this.set("totalUnderlyingTokens", Value.fromBigInt(BigInt.zero()));
-    this.set("totalUnderlyingInt", Value.fromI32(0));
+    this.set("totalUnderlyingDecimal", Value.fromBigDecimal(BigDecimal.zero()));
     this.set("totalQuoteTokens", Value.fromBigInt(BigInt.zero()));
-    this.set("totalQuoteInt", Value.fromI32(0));
+    this.set("totalQuoteDecimal", Value.fromBigDecimal(BigDecimal.zero()));
     this.set("liquidityProviderCount", Value.fromI32(0));
   }
 
@@ -225,13 +225,13 @@ export class Pool extends Entity {
     this.set("strike", Value.fromBigInt(value));
   }
 
-  get strikeInt(): i32 {
-    let value = this.get("strikeInt");
-    return value!.toI32();
+  get strikeDecimal(): BigDecimal {
+    let value = this.get("strikeDecimal");
+    return value!.toBigDecimal();
   }
 
-  set strikeInt(value: i32) {
-    this.set("strikeInt", Value.fromI32(value));
+  set strikeDecimal(value: BigDecimal) {
+    this.set("strikeDecimal", Value.fromBigDecimal(value));
   }
 
   get sigma(): BigInt {
@@ -243,13 +243,13 @@ export class Pool extends Entity {
     this.set("sigma", Value.fromBigInt(value));
   }
 
-  get sigmaInt(): i32 {
-    let value = this.get("sigmaInt");
-    return value!.toI32();
+  get sigmaDecimal(): BigDecimal {
+    let value = this.get("sigmaDecimal");
+    return value!.toBigDecimal();
   }
 
-  set sigmaInt(value: i32) {
-    this.set("sigmaInt", Value.fromI32(value));
+  set sigmaDecimal(value: BigDecimal) {
+    this.set("sigmaDecimal", Value.fromBigDecimal(value));
   }
 
   get maturity(): i32 {
@@ -261,13 +261,13 @@ export class Pool extends Entity {
     this.set("maturity", Value.fromI32(value));
   }
 
-  get gamma(): string {
+  get gamma(): BigDecimal {
     let value = this.get("gamma");
-    return value!.toString();
+    return value!.toBigDecimal();
   }
 
-  set gamma(value: string) {
-    this.set("gamma", Value.fromString(value));
+  set gamma(value: BigDecimal) {
+    this.set("gamma", Value.fromBigDecimal(value));
   }
 
   get liquidity(): BigInt {
@@ -279,13 +279,13 @@ export class Pool extends Entity {
     this.set("liquidity", Value.fromBigInt(value));
   }
 
-  get liquidityInt(): i32 {
-    let value = this.get("liquidityInt");
-    return value!.toI32();
+  get liquidityDecimal(): BigDecimal {
+    let value = this.get("liquidityDecimal");
+    return value!.toBigDecimal();
   }
 
-  set liquidityInt(value: i32) {
-    this.set("liquidityInt", Value.fromI32(value));
+  set liquidityDecimal(value: BigDecimal) {
+    this.set("liquidityDecimal", Value.fromBigDecimal(value));
   }
 
   get txCount(): i32 {
@@ -306,13 +306,13 @@ export class Pool extends Entity {
     this.set("totalUnderlyingTokens", Value.fromBigInt(value));
   }
 
-  get totalUnderlyingInt(): i32 {
-    let value = this.get("totalUnderlyingInt");
-    return value!.toI32();
+  get totalUnderlyingDecimal(): BigDecimal {
+    let value = this.get("totalUnderlyingDecimal");
+    return value!.toBigDecimal();
   }
 
-  set totalUnderlyingInt(value: i32) {
-    this.set("totalUnderlyingInt", Value.fromI32(value));
+  set totalUnderlyingDecimal(value: BigDecimal) {
+    this.set("totalUnderlyingDecimal", Value.fromBigDecimal(value));
   }
 
   get totalQuoteTokens(): BigInt {
@@ -324,13 +324,13 @@ export class Pool extends Entity {
     this.set("totalQuoteTokens", Value.fromBigInt(value));
   }
 
-  get totalQuoteInt(): i32 {
-    let value = this.get("totalQuoteInt");
-    return value!.toI32();
+  get totalQuoteDecimal(): BigDecimal {
+    let value = this.get("totalQuoteDecimal");
+    return value!.toBigDecimal();
   }
 
-  set totalQuoteInt(value: i32) {
-    this.set("totalQuoteInt", Value.fromI32(value));
+  set totalQuoteDecimal(value: BigDecimal) {
+    this.set("totalQuoteDecimal", Value.fromBigDecimal(value));
   }
 
   get liquidityProviderCount(): i32 {
@@ -457,15 +457,21 @@ export class Position extends Entity {
     this.set("underlyingToken", Value.fromString(""));
     this.set("quoteToken", Value.fromString(""));
     this.set("liquidity", Value.fromBigInt(BigInt.zero()));
-    this.set("liquidityInt", Value.fromI32(0));
+    this.set("liquidityDecimal", Value.fromBigDecimal(BigDecimal.zero()));
     this.set("depositedUnderlyingToken", Value.fromBigInt(BigInt.zero()));
-    this.set("depositedUnderlyingStr", Value.fromString(""));
+    this.set(
+      "depositedUnderlyingDecimal",
+      Value.fromBigDecimal(BigDecimal.zero())
+    );
     this.set("depositedQuoteToken", Value.fromBigInt(BigInt.zero()));
-    this.set("depositedQuoteInt", Value.fromI32(0));
+    this.set("depositedQuoteDecimal", Value.fromBigDecimal(BigDecimal.zero()));
     this.set("withdrawnUnderlyingToken", Value.fromBigInt(BigInt.zero()));
-    this.set("withdrawnUnderlyingInt", Value.fromI32(0));
+    this.set(
+      "withdrawnUnderlyingDecimal",
+      Value.fromBigDecimal(BigDecimal.zero())
+    );
     this.set("withdrawnQuoteToken", Value.fromBigInt(BigInt.zero()));
-    this.set("withdrawnQuoteInt", Value.fromI32(0));
+    this.set("withdrawnQuoteDecimal", Value.fromBigDecimal(BigDecimal.zero()));
   }
 
   save(): void {
@@ -539,13 +545,13 @@ export class Position extends Entity {
     this.set("liquidity", Value.fromBigInt(value));
   }
 
-  get liquidityInt(): i32 {
-    let value = this.get("liquidityInt");
-    return value!.toI32();
+  get liquidityDecimal(): BigDecimal {
+    let value = this.get("liquidityDecimal");
+    return value!.toBigDecimal();
   }
 
-  set liquidityInt(value: i32) {
-    this.set("liquidityInt", Value.fromI32(value));
+  set liquidityDecimal(value: BigDecimal) {
+    this.set("liquidityDecimal", Value.fromBigDecimal(value));
   }
 
   get depositedUnderlyingToken(): BigInt {
@@ -557,13 +563,13 @@ export class Position extends Entity {
     this.set("depositedUnderlyingToken", Value.fromBigInt(value));
   }
 
-  get depositedUnderlyingStr(): string {
-    let value = this.get("depositedUnderlyingStr");
-    return value!.toString();
+  get depositedUnderlyingDecimal(): BigDecimal {
+    let value = this.get("depositedUnderlyingDecimal");
+    return value!.toBigDecimal();
   }
 
-  set depositedUnderlyingStr(value: string) {
-    this.set("depositedUnderlyingStr", Value.fromString(value));
+  set depositedUnderlyingDecimal(value: BigDecimal) {
+    this.set("depositedUnderlyingDecimal", Value.fromBigDecimal(value));
   }
 
   get depositedQuoteToken(): BigInt {
@@ -575,13 +581,13 @@ export class Position extends Entity {
     this.set("depositedQuoteToken", Value.fromBigInt(value));
   }
 
-  get depositedQuoteInt(): i32 {
-    let value = this.get("depositedQuoteInt");
-    return value!.toI32();
+  get depositedQuoteDecimal(): BigDecimal {
+    let value = this.get("depositedQuoteDecimal");
+    return value!.toBigDecimal();
   }
 
-  set depositedQuoteInt(value: i32) {
-    this.set("depositedQuoteInt", Value.fromI32(value));
+  set depositedQuoteDecimal(value: BigDecimal) {
+    this.set("depositedQuoteDecimal", Value.fromBigDecimal(value));
   }
 
   get withdrawnUnderlyingToken(): BigInt {
@@ -593,13 +599,13 @@ export class Position extends Entity {
     this.set("withdrawnUnderlyingToken", Value.fromBigInt(value));
   }
 
-  get withdrawnUnderlyingInt(): i32 {
-    let value = this.get("withdrawnUnderlyingInt");
-    return value!.toI32();
+  get withdrawnUnderlyingDecimal(): BigDecimal {
+    let value = this.get("withdrawnUnderlyingDecimal");
+    return value!.toBigDecimal();
   }
 
-  set withdrawnUnderlyingInt(value: i32) {
-    this.set("withdrawnUnderlyingInt", Value.fromI32(value));
+  set withdrawnUnderlyingDecimal(value: BigDecimal) {
+    this.set("withdrawnUnderlyingDecimal", Value.fromBigDecimal(value));
   }
 
   get withdrawnQuoteToken(): BigInt {
@@ -611,12 +617,12 @@ export class Position extends Entity {
     this.set("withdrawnQuoteToken", Value.fromBigInt(value));
   }
 
-  get withdrawnQuoteInt(): i32 {
-    let value = this.get("withdrawnQuoteInt");
-    return value!.toI32();
+  get withdrawnQuoteDecimal(): BigDecimal {
+    let value = this.get("withdrawnQuoteDecimal");
+    return value!.toBigDecimal();
   }
 
-  set withdrawnQuoteInt(value: i32) {
-    this.set("withdrawnQuoteInt", Value.fromI32(value));
+  set withdrawnQuoteDecimal(value: BigDecimal) {
+    this.set("withdrawnQuoteDecimal", Value.fromBigDecimal(value));
   }
 }
