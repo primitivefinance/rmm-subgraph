@@ -8,7 +8,7 @@ import {
   store,
   Bytes,
   BigInt,
-  BigDecimal
+  BigDecimal,
 } from "@graphprotocol/graph-ts";
 
 export class Factory extends Entity {
@@ -341,6 +341,15 @@ export class Pool extends Entity {
   set liquidityProviderCount(value: i32) {
     this.set("liquidityProviderCount", Value.fromI32(value));
   }
+
+  get feesCollected(): BigDecimal {
+    let value = this.get("feesCollected");
+    return value!.toBigDecimal();
+  }
+
+  set feesCollected(value: BigDecimal) {
+    this.set("feesCollected", Value.fromBigDecimal(value));
+  }
 }
 
 export class Engine extends Entity {
@@ -624,5 +633,74 @@ export class Position extends Entity {
 
   set withdrawnQuoteDecimal(value: BigDecimal) {
     this.set("withdrawnQuoteDecimal", Value.fromBigDecimal(value));
+  }
+}
+
+export class Swap extends Entity {
+  constructor(id: string) {
+    super();
+    this.set("id", Value.fromString(id));
+  }
+
+  save(): void {
+    let id = this.get("id");
+    assert(id != null, "Cannot save swap entity without an ID");
+    if (id) {
+      assert(
+        id.kind == ValueKind.STRING,
+        "Cannot save Swap entity with non-string ID. " +
+          'Considering using .toHex() to convert the "id" to a string.'
+      );
+      store.set("Swap", id.toString(), this);
+    }
+  }
+
+  static load(id: string): Swap | null {
+    return changetype<Swap | null>(store.get("Swap", id));
+  }
+
+  get id(): string {
+    let value = this.get("id");
+    return value!.toString();
+  }
+
+  set id(value: string) {
+    this.set("id", Value.fromString(value));
+  }
+
+  get pool(): string {
+    let value = this.get("pool");
+    return value!.toString();
+  }
+
+  set pool(value: string) {
+    this.set("pool", Value.fromString(value));
+  }
+
+  get riskyForStable(): boolean {
+    let value = this.get("riskyForStable");
+    return value!.toBoolean();
+  }
+
+  set riskyForStable(value: boolean) {
+    this.set("riskyForStable", Value.fromBoolean(value));
+  }
+
+  get deltaIn(): BigInt {
+    let value = this.get("deltaIn");
+    return value!.toBigInt();
+  }
+
+  set deltaIn(value: BigInt) {
+    this.set("deltaIn", Value.fromBigInt(value));
+  }
+
+  get deltaOut(): BigInt {
+    let value = this.get("deltaOut");
+    return value!.toBigInt();
+  }
+
+  set deltaOut(value: BigInt) {
+    this.set("deltaOut", Value.fromBigInt(value));
   }
 }

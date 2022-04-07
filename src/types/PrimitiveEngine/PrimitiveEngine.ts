@@ -7,7 +7,7 @@ import {
   Entity,
   Bytes,
   Address,
-  BigInt
+  BigInt,
 } from "@graphprotocol/graph-ts";
 
 export class Allocate extends ethereum.Event {
@@ -441,7 +441,7 @@ export class PrimitiveEngine extends ethereum.SmartContract {
         ethereum.Value.fromUnsignedBigInt(delRisky),
         ethereum.Value.fromUnsignedBigInt(delStable),
         ethereum.Value.fromBoolean(fromMargin),
-        ethereum.Value.fromBytes(data)
+        ethereum.Value.fromBytes(data),
       ]
     );
 
@@ -465,7 +465,7 @@ export class PrimitiveEngine extends ethereum.SmartContract {
         ethereum.Value.fromUnsignedBigInt(delRisky),
         ethereum.Value.fromUnsignedBigInt(delStable),
         ethereum.Value.fromBoolean(fromMargin),
-        ethereum.Value.fromBytes(data)
+        ethereum.Value.fromBytes(data),
       ]
     );
     if (result.reverted) {
@@ -533,7 +533,7 @@ export class PrimitiveEngine extends ethereum.SmartContract {
         ethereum.Value.fromUnsignedBigInt(gamma),
         ethereum.Value.fromUnsignedBigInt(riskyPerLp),
         ethereum.Value.fromUnsignedBigInt(delLiquidity),
-        ethereum.Value.fromBytes(data)
+        ethereum.Value.fromBytes(data),
       ]
     );
 
@@ -563,7 +563,7 @@ export class PrimitiveEngine extends ethereum.SmartContract {
         ethereum.Value.fromUnsignedBigInt(gamma),
         ethereum.Value.fromUnsignedBigInt(riskyPerLp),
         ethereum.Value.fromUnsignedBigInt(delLiquidity),
-        ethereum.Value.fromBytes(data)
+        ethereum.Value.fromBytes(data),
       ]
     );
     if (result.reverted) {
@@ -596,7 +596,7 @@ export class PrimitiveEngine extends ethereum.SmartContract {
 
   invariantOf(poolId: Bytes): BigInt {
     let result = super.call("invariantOf", "invariantOf(bytes32):(int128)", [
-      ethereum.Value.fromFixedBytes(poolId)
+      ethereum.Value.fromFixedBytes(poolId),
     ]);
 
     return result[0].toBigInt();
@@ -604,7 +604,7 @@ export class PrimitiveEngine extends ethereum.SmartContract {
 
   try_invariantOf(poolId: Bytes): ethereum.CallResult<BigInt> {
     let result = super.tryCall("invariantOf", "invariantOf(bytes32):(int128)", [
-      ethereum.Value.fromFixedBytes(poolId)
+      ethereum.Value.fromFixedBytes(poolId),
     ]);
     if (result.reverted) {
       return new ethereum.CallResult();
@@ -619,7 +619,7 @@ export class PrimitiveEngine extends ethereum.SmartContract {
       "liquidity(address,bytes32):(uint256)",
       [
         ethereum.Value.fromAddress(param0),
-        ethereum.Value.fromFixedBytes(param1)
+        ethereum.Value.fromFixedBytes(param1),
       ]
     );
 
@@ -632,7 +632,7 @@ export class PrimitiveEngine extends ethereum.SmartContract {
       "liquidity(address,bytes32):(uint256)",
       [
         ethereum.Value.fromAddress(param0),
-        ethereum.Value.fromFixedBytes(param1)
+        ethereum.Value.fromFixedBytes(param1),
       ]
     );
     if (result.reverted) {
@@ -644,7 +644,7 @@ export class PrimitiveEngine extends ethereum.SmartContract {
 
   margins(param0: Address): PrimitiveEngine__marginsResult {
     let result = super.call("margins", "margins(address):(uint128,uint128)", [
-      ethereum.Value.fromAddress(param0)
+      ethereum.Value.fromAddress(param0),
     ]);
 
     return new PrimitiveEngine__marginsResult(
@@ -679,7 +679,7 @@ export class PrimitiveEngine extends ethereum.SmartContract {
       "remove(bytes32,uint256):(uint256,uint256)",
       [
         ethereum.Value.fromFixedBytes(poolId),
-        ethereum.Value.fromUnsignedBigInt(delLiquidity)
+        ethereum.Value.fromUnsignedBigInt(delLiquidity),
       ]
     );
 
@@ -698,7 +698,7 @@ export class PrimitiveEngine extends ethereum.SmartContract {
       "remove(bytes32,uint256):(uint256,uint256)",
       [
         ethereum.Value.fromFixedBytes(poolId),
-        ethereum.Value.fromUnsignedBigInt(delLiquidity)
+        ethereum.Value.fromUnsignedBigInt(delLiquidity),
       ]
     );
     if (result.reverted) {
