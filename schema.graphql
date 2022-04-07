@@ -22,7 +22,7 @@ type Pool @entity {
   sigma: BigInt!
   sigmaDecimal: BigDecimal!
   maturity: Int!
-  gamma: BigDecimal!
+  gamma: BigInt!
   liquidity: BigInt!
   liquidityDecimal: BigDecimal!
   txCount: Int!
@@ -32,6 +32,7 @@ type Pool @entity {
   totalQuoteDecimal: BigDecimal!
   liquidityProviderCount: Int!
   engine: Engine!
+  feesCollected: BigInt!
 }
 
 type Engine @entity {
@@ -61,4 +62,13 @@ type Position @entity {
   withdrawnUnderlyingDecimal: BigDecimal!
   withdrawnQuoteToken: BigInt!
   withdrawnQuoteDecimal: BigDecimal!
+}
+
+type Swap @entity {
+  id: ID!
+  pool: Pool!
+  riskyForStable: Boolean!
+  deltaIn: BigInt!
+  deltaOut: BigInt!
+  amount: BigInt!
 }
