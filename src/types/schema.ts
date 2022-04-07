@@ -153,6 +153,7 @@ export class Pool extends Entity {
     this.set("totalQuoteDecimal", Value.fromBigDecimal(BigDecimal.zero()));
     this.set("liquidityProviderCount", Value.fromI32(0));
     this.set("feesCollected", Value.fromBigInt(BigInt.zero()));
+    this.set("engine", Value.fromString(""));
   }
 
   save(): void {
@@ -343,13 +344,13 @@ export class Pool extends Entity {
     this.set("liquidityProviderCount", Value.fromI32(value));
   }
 
-  get feesCollected(): BigInt {
-    let value = this.get("feesCollected");
-    return value!.toBigInt();
+  get engine(): string {
+    let value = this.get("engine");
+    return value!.toString();
   }
 
-  set feesCollected(value: BigInt) {
-    this.set("feesCollected", Value.fromBigInt(value));
+  set engine(value: string) {
+    this.set("engine", Value.fromString(value));
   }
 }
 

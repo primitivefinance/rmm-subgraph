@@ -44,6 +44,7 @@ export function handleCreate(event: Create): void {
   pool.sigma = event.params.sigma;
   pool.sigmaDecimal = toDecimal(pool.sigma, 4).truncate(6);
   pool.maturity = event.params.maturity.toI32();
+  pool.engine = event.params.engine.toHexString();
 
   let reserves = engineContract.reserves(event.params.poolId);
   pool.totalUnderlyingTokens = reserves.value0;
@@ -103,6 +104,7 @@ export function handleAllocate(event: Allocate): void {
     pool.strike = strike;
     pool.sigma = sigma;
     pool.maturity = maturity.toI32();
+    pool.engine = event.params.engine.toHexString();
   }
 
   let reserves = engineContract.reserves(event.params.poolId);
@@ -188,6 +190,7 @@ export function handleRemove(event: Remove): void {
     pool.strike = strike;
     pool.sigma = sigma;
     pool.maturity = maturity.toI32();
+    pool.engine = event.params.engine.toHexString();
   }
 
   let reserves = engineContract.reserves(event.params.poolId);
