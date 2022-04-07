@@ -31,6 +31,7 @@ type Pool @entity {
   totalQuoteTokens: BigInt!
   totalQuoteDecimal: BigDecimal!
   liquidityProviderCount: Int!
+  engine: Engine!
   feesCollected: BigInt!
 }
 
