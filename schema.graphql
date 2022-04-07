@@ -15,7 +15,7 @@ type Pool @entity {
   id: ID!
   createdAtTimestamp: Int!
   createdAtBlockNumber: Int!
-  underlyingToken: Token! 
+  underlyingToken: Token!
   quoteToken: Token!
   strike: BigInt!
   strikeDecimal: BigDecimal!
@@ -31,13 +31,14 @@ type Pool @entity {
   totalQuoteTokens: BigInt!
   totalQuoteDecimal: BigDecimal!
   liquidityProviderCount: Int!
+  engine: Engine!
 }
 
 type Engine @entity {
   id: ID!
   poolCount: Int!
   pools: [Pool!]!
-  underlyingToken: Token! 
+  underlyingToken: Token!
   txCount: Int!
   quoteToken: Token!
   createdAtTimestamp: BigInt!
