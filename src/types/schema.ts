@@ -143,7 +143,7 @@ export class Pool extends Entity {
     this.set("sigma", Value.fromBigInt(BigInt.zero()));
     this.set("sigmaDecimal", Value.fromBigDecimal(BigDecimal.zero()));
     this.set("maturity", Value.fromI32(0));
-    this.set("gamma", Value.fromBigDecimal(BigDecimal.zero()));
+    this.set("gamma", Value.fromBigInt(BigInt.zero()));
     this.set("liquidity", Value.fromBigInt(BigInt.zero()));
     this.set("liquidityDecimal", Value.fromBigDecimal(BigDecimal.zero()));
     this.set("txCount", Value.fromI32(0));
@@ -261,13 +261,13 @@ export class Pool extends Entity {
     this.set("maturity", Value.fromI32(value));
   }
 
-  get gamma(): BigDecimal {
+  get gamma(): BigInt {
     let value = this.get("gamma");
-    return value!.toBigDecimal();
+    return value!.toBigInt();
   }
 
-  set gamma(value: BigDecimal) {
-    this.set("gamma", Value.fromBigDecimal(value));
+  set gamma(value: BigInt) {
+    this.set("gamma", Value.fromBigInt(value));
   }
 
   get liquidity(): BigInt {
@@ -342,13 +342,13 @@ export class Pool extends Entity {
     this.set("liquidityProviderCount", Value.fromI32(value));
   }
 
-  get feesCollected(): BigDecimal {
+  get feesCollected(): BigInt {
     let value = this.get("feesCollected");
-    return value!.toBigDecimal();
+    return value!.toBigInt();
   }
 
-  set feesCollected(value: BigDecimal) {
-    this.set("feesCollected", Value.fromBigDecimal(value));
+  set feesCollected(value: BigInt) {
+    this.set("feesCollected", Value.fromBigInt(value));
   }
 }
 

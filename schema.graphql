@@ -22,7 +22,7 @@ type Pool @entity {
   sigma: BigInt!
   sigmaDecimal: BigDecimal!
   maturity: Int!
-  gamma: BigDecimal!
+  gamma: BigInt!
   liquidity: BigInt!
   liquidityDecimal: BigDecimal!
   txCount: Int!
@@ -31,7 +31,7 @@ type Pool @entity {
   totalQuoteTokens: BigInt!
   totalQuoteDecimal: BigDecimal!
   liquidityProviderCount: Int!
-  feesCollected: BigDecimal!
+  feesCollected: BigInt!
 }
 
 type Engine @entity {
