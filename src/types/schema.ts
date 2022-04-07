@@ -8,7 +8,7 @@ import {
   store,
   Bytes,
   BigInt,
-  BigDecimal,
+  BigDecimal
 } from "@graphprotocol/graph-ts";
 
 export class Factory extends Entity {
@@ -152,6 +152,7 @@ export class Pool extends Entity {
     this.set("totalQuoteTokens", Value.fromBigInt(BigInt.zero()));
     this.set("totalQuoteDecimal", Value.fromBigDecimal(BigDecimal.zero()));
     this.set("liquidityProviderCount", Value.fromI32(0));
+    this.set("feesCollected", Value.fromBigInt(BigInt.zero()));
   }
 
   save(): void {
@@ -640,11 +641,17 @@ export class Swap extends Entity {
   constructor(id: string) {
     super();
     this.set("id", Value.fromString(id));
+
+    this.set("pool", Value.fromString(""));
+    this.set("riskyForStable", Value.fromBoolean(false));
+    this.set("deltaIn", Value.fromBigInt(BigInt.zero()));
+    this.set("deltaOut", Value.fromBigInt(BigInt.zero()));
+    this.set("amount", Value.fromBigInt(BigInt.zero()));
   }
 
   save(): void {
     let id = this.get("id");
-    assert(id != null, "Cannot save swap entity without an ID");
+    assert(id != null, "Cannot save Swap entity without an ID");
     if (id) {
       assert(
         id.kind == ValueKind.STRING,
@@ -702,5 +709,14 @@ export class Swap extends Entity {
 
   set deltaOut(value: BigInt) {
     this.set("deltaOut", Value.fromBigInt(value));
+  }
+
+  get amount(): BigInt {
+    let value = this.get("amount");
+    return value!.toBigInt();
+  }
+
+  set amount(value: BigInt) {
+    this.set("amount", Value.fromBigInt(value));
   }
 }
