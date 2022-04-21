@@ -153,7 +153,18 @@ export class Pool extends Entity {
     this.set("totalQuoteDecimal", Value.fromBigDecimal(BigDecimal.zero()));
     this.set("liquidityProviderCount", Value.fromI32(0));
     this.set("engine", Value.fromString(""));
-    this.set("feesCollected", Value.fromBigInt(BigInt.zero()));
+    this.set("feesCollectedUnderlying", Value.fromBigInt(BigInt.zero()));
+    this.set(
+      "feesCollectedUnderlyingDecimal",
+      Value.fromBigDecimal(BigDecimal.zero())
+    );
+    this.set("feesCollectedQuote", Value.fromBigInt(BigInt.zero()));
+    this.set(
+      "feesCollectedQuoteDecimal",
+      Value.fromBigDecimal(BigDecimal.zero())
+    );
+    this.set("invariant", Value.fromBigInt(BigInt.zero()));
+    this.set("invariantStart", Value.fromBigInt(BigInt.zero()));
   }
 
   save(): void {
@@ -353,13 +364,58 @@ export class Pool extends Entity {
     this.set("engine", Value.fromString(value));
   }
 
-  get feesCollected(): BigInt {
-    let value = this.get("feesCollected");
+  get feesCollectedUnderlying(): BigInt {
+    let value = this.get("feesCollectedUnderlying");
     return value!.toBigInt();
   }
 
-  set feesCollected(value: BigInt) {
-    this.set("feesCollected", Value.fromBigInt(value));
+  set feesCollectedUnderlying(value: BigInt) {
+    this.set("feesCollectedUnderlying", Value.fromBigInt(value));
+  }
+
+  get feesCollectedUnderlyingDecimal(): BigDecimal {
+    let value = this.get("feesCollectedUnderlyingDecimal");
+    return value!.toBigDecimal();
+  }
+
+  set feesCollectedUnderlyingDecimal(value: BigDecimal) {
+    this.set("feesCollectedUnderlyingDecimal", Value.fromBigDecimal(value));
+  }
+
+  get feesCollectedQuote(): BigInt {
+    let value = this.get("feesCollectedQuote");
+    return value!.toBigInt();
+  }
+
+  set feesCollectedQuote(value: BigInt) {
+    this.set("feesCollectedQuote", Value.fromBigInt(value));
+  }
+
+  get feesCollectedQuoteDecimal(): BigDecimal {
+    let value = this.get("feesCollectedQuoteDecimal");
+    return value!.toBigDecimal();
+  }
+
+  set feesCollectedQuoteDecimal(value: BigDecimal) {
+    this.set("feesCollectedQuoteDecimal", Value.fromBigDecimal(value));
+  }
+
+  get invariant(): BigInt {
+    let value = this.get("invariant");
+    return value!.toBigInt();
+  }
+
+  set invariant(value: BigInt) {
+    this.set("invariant", Value.fromBigInt(value));
+  }
+
+  get invariantStart(): BigInt {
+    let value = this.get("invariantStart");
+    return value!.toBigInt();
+  }
+
+  set invariantStart(value: BigInt) {
+    this.set("invariantStart", Value.fromBigInt(value));
   }
 }
 
@@ -492,6 +548,8 @@ export class Position extends Entity {
     );
     this.set("withdrawnQuoteToken", Value.fromBigInt(BigInt.zero()));
     this.set("withdrawnQuoteDecimal", Value.fromBigDecimal(BigDecimal.zero()));
+    this.set("invariantAtLastAllocate", Value.fromBigInt(BigInt.zero()));
+    this.set("invariantAtCreation", Value.fromBigInt(BigInt.zero()));
   }
 
   save(): void {
@@ -645,6 +703,252 @@ export class Position extends Entity {
   set withdrawnQuoteDecimal(value: BigDecimal) {
     this.set("withdrawnQuoteDecimal", Value.fromBigDecimal(value));
   }
+
+  get invariantAtLastAllocate(): BigInt {
+    let value = this.get("invariantAtLastAllocate");
+    return value!.toBigInt();
+  }
+
+  set invariantAtLastAllocate(value: BigInt) {
+    this.set("invariantAtLastAllocate", Value.fromBigInt(value));
+  }
+
+  get invariantAtCreation(): BigInt {
+    let value = this.get("invariantAtCreation");
+    return value!.toBigInt();
+  }
+
+  set invariantAtCreation(value: BigInt) {
+    this.set("invariantAtCreation", Value.fromBigInt(value));
+  }
+}
+
+export class Allocate extends Entity {
+  constructor(id: string) {
+    super();
+    this.set("id", Value.fromString(id));
+
+    this.set("pool", Value.fromString(""));
+    this.set("underlyingTokenAmount", Value.fromBigInt(BigInt.zero()));
+    this.set("underlyingTokenDecimal", Value.fromBigDecimal(BigDecimal.zero()));
+    this.set("quoteTokenAmount", Value.fromBigInt(BigInt.zero()));
+    this.set("quoteTokenDecimal", Value.fromBigDecimal(BigDecimal.zero()));
+    this.set("liquidityAmount", Value.fromBigInt(BigInt.zero()));
+    this.set("liquidityDecimal", Value.fromBigDecimal(BigDecimal.zero()));
+    this.set("timestamp", Value.fromI32(0));
+  }
+
+  save(): void {
+    let id = this.get("id");
+    assert(id != null, "Cannot save Allocate entity without an ID");
+    if (id) {
+      assert(
+        id.kind == ValueKind.STRING,
+        "Cannot save Allocate entity with non-string ID. " +
+          'Considering using .toHex() to convert the "id" to a string.'
+      );
+      store.set("Allocate", id.toString(), this);
+    }
+  }
+
+  static load(id: string): Allocate | null {
+    return changetype<Allocate | null>(store.get("Allocate", id));
+  }
+
+  get id(): string {
+    let value = this.get("id");
+    return value!.toString();
+  }
+
+  set id(value: string) {
+    this.set("id", Value.fromString(value));
+  }
+
+  get pool(): string {
+    let value = this.get("pool");
+    return value!.toString();
+  }
+
+  set pool(value: string) {
+    this.set("pool", Value.fromString(value));
+  }
+
+  get underlyingTokenAmount(): BigInt {
+    let value = this.get("underlyingTokenAmount");
+    return value!.toBigInt();
+  }
+
+  set underlyingTokenAmount(value: BigInt) {
+    this.set("underlyingTokenAmount", Value.fromBigInt(value));
+  }
+
+  get underlyingTokenDecimal(): BigDecimal {
+    let value = this.get("underlyingTokenDecimal");
+    return value!.toBigDecimal();
+  }
+
+  set underlyingTokenDecimal(value: BigDecimal) {
+    this.set("underlyingTokenDecimal", Value.fromBigDecimal(value));
+  }
+
+  get quoteTokenAmount(): BigInt {
+    let value = this.get("quoteTokenAmount");
+    return value!.toBigInt();
+  }
+
+  set quoteTokenAmount(value: BigInt) {
+    this.set("quoteTokenAmount", Value.fromBigInt(value));
+  }
+
+  get quoteTokenDecimal(): BigDecimal {
+    let value = this.get("quoteTokenDecimal");
+    return value!.toBigDecimal();
+  }
+
+  set quoteTokenDecimal(value: BigDecimal) {
+    this.set("quoteTokenDecimal", Value.fromBigDecimal(value));
+  }
+
+  get liquidityAmount(): BigInt {
+    let value = this.get("liquidityAmount");
+    return value!.toBigInt();
+  }
+
+  set liquidityAmount(value: BigInt) {
+    this.set("liquidityAmount", Value.fromBigInt(value));
+  }
+
+  get liquidityDecimal(): BigDecimal {
+    let value = this.get("liquidityDecimal");
+    return value!.toBigDecimal();
+  }
+
+  set liquidityDecimal(value: BigDecimal) {
+    this.set("liquidityDecimal", Value.fromBigDecimal(value));
+  }
+
+  get timestamp(): i32 {
+    let value = this.get("timestamp");
+    return value!.toI32();
+  }
+
+  set timestamp(value: i32) {
+    this.set("timestamp", Value.fromI32(value));
+  }
+}
+
+export class Remove extends Entity {
+  constructor(id: string) {
+    super();
+    this.set("id", Value.fromString(id));
+
+    this.set("pool", Value.fromString(""));
+    this.set("underlyingTokenAmount", Value.fromBigInt(BigInt.zero()));
+    this.set("underlyingTokenDecimal", Value.fromBigDecimal(BigDecimal.zero()));
+    this.set("quoteTokenAmount", Value.fromBigInt(BigInt.zero()));
+    this.set("quoteTokenDecimal", Value.fromBigDecimal(BigDecimal.zero()));
+    this.set("liquidityAmount", Value.fromBigInt(BigInt.zero()));
+    this.set("liquidityDecimal", Value.fromBigDecimal(BigDecimal.zero()));
+    this.set("timestamp", Value.fromI32(0));
+  }
+
+  save(): void {
+    let id = this.get("id");
+    assert(id != null, "Cannot save Remove entity without an ID");
+    if (id) {
+      assert(
+        id.kind == ValueKind.STRING,
+        "Cannot save Remove entity with non-string ID. " +
+          'Considering using .toHex() to convert the "id" to a string.'
+      );
+      store.set("Remove", id.toString(), this);
+    }
+  }
+
+  static load(id: string): Remove | null {
+    return changetype<Remove | null>(store.get("Remove", id));
+  }
+
+  get id(): string {
+    let value = this.get("id");
+    return value!.toString();
+  }
+
+  set id(value: string) {
+    this.set("id", Value.fromString(value));
+  }
+
+  get pool(): string {
+    let value = this.get("pool");
+    return value!.toString();
+  }
+
+  set pool(value: string) {
+    this.set("pool", Value.fromString(value));
+  }
+
+  get underlyingTokenAmount(): BigInt {
+    let value = this.get("underlyingTokenAmount");
+    return value!.toBigInt();
+  }
+
+  set underlyingTokenAmount(value: BigInt) {
+    this.set("underlyingTokenAmount", Value.fromBigInt(value));
+  }
+
+  get underlyingTokenDecimal(): BigDecimal {
+    let value = this.get("underlyingTokenDecimal");
+    return value!.toBigDecimal();
+  }
+
+  set underlyingTokenDecimal(value: BigDecimal) {
+    this.set("underlyingTokenDecimal", Value.fromBigDecimal(value));
+  }
+
+  get quoteTokenAmount(): BigInt {
+    let value = this.get("quoteTokenAmount");
+    return value!.toBigInt();
+  }
+
+  set quoteTokenAmount(value: BigInt) {
+    this.set("quoteTokenAmount", Value.fromBigInt(value));
+  }
+
+  get quoteTokenDecimal(): BigDecimal {
+    let value = this.get("quoteTokenDecimal");
+    return value!.toBigDecimal();
+  }
+
+  set quoteTokenDecimal(value: BigDecimal) {
+    this.set("quoteTokenDecimal", Value.fromBigDecimal(value));
+  }
+
+  get liquidityAmount(): BigInt {
+    let value = this.get("liquidityAmount");
+    return value!.toBigInt();
+  }
+
+  set liquidityAmount(value: BigInt) {
+    this.set("liquidityAmount", Value.fromBigInt(value));
+  }
+
+  get liquidityDecimal(): BigDecimal {
+    let value = this.get("liquidityDecimal");
+    return value!.toBigDecimal();
+  }
+
+  set liquidityDecimal(value: BigDecimal) {
+    this.set("liquidityDecimal", Value.fromBigDecimal(value));
+  }
+
+  get timestamp(): i32 {
+    let value = this.get("timestamp");
+    return value!.toI32();
+  }
+
+  set timestamp(value: i32) {
+    this.set("timestamp", Value.fromI32(value));
+  }
 }
 
 export class Swap extends Entity {
@@ -653,10 +957,12 @@ export class Swap extends Entity {
     this.set("id", Value.fromString(id));
 
     this.set("pool", Value.fromString(""));
+    this.set("sender", Value.fromString(""));
     this.set("riskyForStable", Value.fromBoolean(false));
     this.set("deltaIn", Value.fromBigInt(BigInt.zero()));
     this.set("deltaOut", Value.fromBigInt(BigInt.zero()));
     this.set("amount", Value.fromBigInt(BigInt.zero()));
+    this.set("timestamp", Value.fromI32(0));
   }
 
   save(): void {
@@ -694,6 +1000,15 @@ export class Swap extends Entity {
     this.set("pool", Value.fromString(value));
   }
 
+  get sender(): string {
+    let value = this.get("sender");
+    return value!.toString();
+  }
+
+  set sender(value: string) {
+    this.set("sender", Value.fromString(value));
+  }
+
   get riskyForStable(): boolean {
     let value = this.get("riskyForStable");
     return value!.toBoolean();
@@ -728,5 +1043,14 @@ export class Swap extends Entity {
 
   set amount(value: BigInt) {
     this.set("amount", Value.fromBigInt(value));
+  }
+
+  get timestamp(): i32 {
+    let value = this.get("timestamp");
+    return value!.toI32();
+  }
+
+  set timestamp(value: i32) {
+    this.set("timestamp", Value.fromI32(value));
   }
 }

@@ -32,7 +32,12 @@ type Pool @entity {
   totalQuoteDecimal: BigDecimal!
   liquidityProviderCount: Int!
   engine: Engine!
-  feesCollected: BigInt!
+  feesCollectedUnderlying: BigInt!
+  feesCollectedUnderlyingDecimal: BigDecimal!
+  feesCollectedQuote: BigInt!
+  feesCollectedQuoteDecimal: BigDecimal!
+  invariant: BigInt!
+  invariantStart: BigInt!
 }
 
 type Engine @entity {
@@ -62,13 +67,41 @@ type Position @entity {
   withdrawnUnderlyingDecimal: BigDecimal!
   withdrawnQuoteToken: BigInt!
   withdrawnQuoteDecimal: BigDecimal!
+  invariantAtLastAllocate: BigInt!
+  invariantAtCreation: BigInt!
+}
+
+type Allocate @entity {
+  id: ID!
+  pool: Pool!
+  underlyingTokenAmount: BigInt!
+  underlyingTokenDecimal: BigDecimal!
+  quoteTokenAmount: BigInt!
+  quoteTokenDecimal: BigDecimal!
+  liquidityAmount: BigInt!
+  liquidityDecimal: BigDecimal!
+  timestamp: Int!
+}
+
+type Remove @entity {
+  id: ID!
+  pool: Pool!
+  underlyingTokenAmount: BigInt!
+  underlyingTokenDecimal: BigDecimal!
+  quoteTokenAmount: BigInt!
+  quoteTokenDecimal: BigDecimal!
+  liquidityAmount: BigInt!
+  liquidityDecimal: BigDecimal!
+  timestamp: Int!
 }
 
 type Swap @entity {
   id: ID!
   pool: Pool!
+  sender: String!
   riskyForStable: Boolean!
   deltaIn: BigInt!
   deltaOut: BigInt!
   amount: BigInt!
+  timestamp: Int!
 }
