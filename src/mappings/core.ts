@@ -106,7 +106,11 @@ export function handleSwap(event: Swap): void {
   swap.deltaIn = event.params.deltaIn;
   swap.deltaOut = event.params.deltaOut;
 
-  pool.invariant = engineContract.try_invariantOf(event.params.poolId).value.div(BigInt.fromI32(2).pow(64))
+  let invariant = engineContract.try_invariantOf(event.params.poolId)
+
+  if (!invariant.reverted) {
+    pool.invariant = invariant.value.div(BigInt.fromI32(2).pow(64))
+  }
 
   swap.save();
   engine.save();

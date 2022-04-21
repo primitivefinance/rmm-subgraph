@@ -1,11 +1,5 @@
-import {
-  log,
-  BigInt,
-  BigDecimal,
-  Address,
-  Bytes,
-} from "@graphprotocol/graph-ts";
-import { Engine, Token, Pool, Position } from "../types/schema";
+import { BigInt } from "@graphprotocol/graph-ts";
+import { Pool, Position } from "../types/schema";
 import { PrimitiveEngine as EngineABI } from "../types/PrimitiveEngine/PrimitiveEngine";
 import { ERC20 as TokenABI } from "../types/PrimitiveEngine/ERC20";
 import { toDecimal } from "../utils/decimals";
@@ -14,12 +8,6 @@ import {
   Remove,
   Create,
 } from "../types/PrimitiveManager/PrimitiveManager";
-import {
-  fetchTokenDecimals,
-  fetchTokenName,
-  fetchTokenSymbol,
-  fetchTokenTotalSupply,
-} from "../token";
 
 // TODO: Move the engine mappings to core.ts
 
@@ -40,7 +28,9 @@ export function handleCreate(event: Create): void {
   let pool = new Pool(event.params.poolId.toHexString());
 
   pool.createdAtTimestamp = event.block.timestamp.toI32();
-  pool.invariantStart = invariant.value.div(BigInt.fromI32(2).pow(64));
+  if (!invariant.reverted) {
+    pool.invariantStart = invariant.value.div(BigInt.fromI32(2).pow(64));
+  }
   pool.createdAtBlockNumber = event.block.number.toI32();
   pool.quoteToken = quoteId.toHexString();
   pool.underlyingToken = underlyingId.toHexString();
@@ -149,7 +139,15 @@ export function handleAllocate(event: Allocate): void {
     // let minLiquidity = engineContract.MIN_LIQUIDITY()
     position.liquidity = event.params.delLiquidity; // maybe minus minLiquidity, but that becomes hard because of how we get the reserves
     position.liquidityDecimal = toDecimal(position.liquidity, 18).truncate(6);
-    position.invariantAtCreation = invariant.value.div(BigInt.fromI32(2).pow(64));
+    if (!invariant.reverted) {
+      position.invariantAtCreation = invariant.value.div(
+        BigInt.fromI32(2).pow(64)
+      );
+      position.invariantAtLastAllocate = invariant.value.div(
+        BigInt.fromI32(2).pow(64)
+      );
+      pool.invariant = invariant.value.div(BigInt.fromI32(2).pow(64));
+    }
   }
 
   position.liquidity = position.liquidity.plus(event.params.delLiquidity);
@@ -167,9 +165,6 @@ export function handleAllocate(event: Allocate): void {
     position.depositedQuoteToken,
     quoteDecimals
   ).truncate(6);
-
-  position.invariantAtLastAllocate = invariant.value.div(BigInt.fromI32(2).pow(64));
-  pool.invariant = invariant.value.div(BigInt.fromI32(2).pow(64));
 
   position.save();
   pool.save();
@@ -191,7 +186,6 @@ export function handleRemove(event: Remove): void {
   let invariant = engineContract.try_invariantOf(event.params.poolId);
 
   let calibration = engineContract.calibrations(event.params.poolId);
-
 
   let strike = calibration.value0;
   let sigma = calibration.value1;
@@ -248,8 +242,9 @@ export function handleRemove(event: Remove): void {
     position.withdrawnUnderlyingToken,
     underlyingDecimals
   ).truncate(6);
-
-  pool.invariant = invariant.value.div(BigInt.fromI32(2).pow(64));
+  if (!invariant.reverted) {
+    pool.invariant = invariant.value.div(BigInt.fromI32(2).pow(64));
+  }
 
   position.save();
   pool.save();
