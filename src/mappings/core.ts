@@ -1,11 +1,5 @@
-import {
-  BigInt,
-} from "@graphprotocol/graph-ts";
-import {
-  Engine,
-  Pool,
-  Swap as SwapEntity,
-} from "../types/schema";
+import { BigInt } from "@graphprotocol/graph-ts";
+import { Engine, Pool, Swap as SwapEntity } from "../types/schema";
 import { ERC20 as TokenABI } from "../types/PrimitiveEngine/ERC20";
 import { PrimitiveEngine as EngineABI } from "../types/PrimitiveEngine/PrimitiveEngine";
 import {
@@ -86,14 +80,24 @@ export function handleSwap(event: Swap): void {
 
   if (event.params.riskyForStable) {
     pool.feesCollectedUnderlying = pool.feesCollectedUnderlying.plus(
-      event.params.deltaIn.times(pool.gamma).div(BigInt.fromI32(10).pow(4))
+      event.params.deltaIn.minus(
+        event.params.deltaIn.times(pool.gamma).div(BigInt.fromI32(10).pow(4))
+      )
     );
-    pool.feesCollectedUnderlyingDecimal = toDecimal(pool.feesCollectedUnderlying, underlyingDecimals).truncate(8)
+    pool.feesCollectedUnderlyingDecimal = toDecimal(
+      pool.feesCollectedUnderlying,
+      underlyingDecimals
+    ).truncate(8);
   } else {
     pool.feesCollectedQuote = pool.feesCollectedQuote.plus(
-      event.params.deltaIn.times(pool.gamma).div(BigInt.fromI32(10).pow(4))
+      event.params.deltaIn.minus(
+        event.params.deltaIn.times(pool.gamma).div(BigInt.fromI32(10).pow(4))
+      )
     );
-    pool.feesCollectedQuoteDecimal = toDecimal(pool.feesCollectedQuote, quoteDecimals).truncate(8)
+    pool.feesCollectedQuoteDecimal = toDecimal(
+      pool.feesCollectedQuote,
+      quoteDecimals
+    ).truncate(8);
   }
 
   let swap = new SwapEntity(event.address.toHexString());
@@ -106,10 +110,10 @@ export function handleSwap(event: Swap): void {
   swap.deltaIn = event.params.deltaIn;
   swap.deltaOut = event.params.deltaOut;
 
-  let invariant = engineContract.try_invariantOf(event.params.poolId)
+  let invariant = engineContract.try_invariantOf(event.params.poolId);
 
   if (!invariant.reverted) {
-    pool.invariant = invariant.value.div(BigInt.fromI32(2).pow(64))
+    pool.invariant = invariant.value.div(BigInt.fromI32(2).pow(64));
   }
 
   swap.save();
