@@ -142,6 +142,7 @@ export class Pool extends Entity {
     this.set("strikeDecimal", Value.fromBigDecimal(BigDecimal.zero()));
     this.set("sigma", Value.fromBigInt(BigInt.zero()));
     this.set("sigmaDecimal", Value.fromBigDecimal(BigDecimal.zero()));
+    this.set("tau", Value.fromI32(0));
     this.set("maturity", Value.fromI32(0));
     this.set("gamma", Value.fromBigInt(BigInt.zero()));
     this.set("liquidity", Value.fromBigInt(BigInt.zero()));
@@ -165,6 +166,16 @@ export class Pool extends Entity {
     );
     this.set("invariant", Value.fromBigInt(BigInt.zero()));
     this.set("invariantStart", Value.fromBigInt(BigInt.zero()));
+    this.set(
+      "initialUnderlyingDecimal",
+      Value.fromBigDecimal(BigDecimal.zero())
+    );
+    this.set("initialQuoteDecimal", Value.fromBigDecimal(BigDecimal.zero()));
+    this.set(
+      "initialLiquidityDecimal",
+      Value.fromBigDecimal(BigDecimal.zero())
+    );
+    this.set("initialTau", Value.fromI32(0));
   }
 
   save(): void {
@@ -263,6 +274,15 @@ export class Pool extends Entity {
 
   set sigmaDecimal(value: BigDecimal) {
     this.set("sigmaDecimal", Value.fromBigDecimal(value));
+  }
+
+  get tau(): i32 {
+    let value = this.get("tau");
+    return value!.toI32();
+  }
+
+  set tau(value: i32) {
+    this.set("tau", Value.fromI32(value));
   }
 
   get maturity(): i32 {
@@ -417,6 +437,51 @@ export class Pool extends Entity {
   set invariantStart(value: BigInt) {
     this.set("invariantStart", Value.fromBigInt(value));
   }
+
+  get initialUnderlyingDecimal(): BigDecimal {
+    let value = this.get("initialUnderlyingDecimal");
+    return value!.toBigDecimal();
+  }
+
+  set initialUnderlyingDecimal(value: BigDecimal) {
+    this.set("initialUnderlyingDecimal", Value.fromBigDecimal(value));
+  }
+
+  get initialQuoteDecimal(): BigDecimal {
+    let value = this.get("initialQuoteDecimal");
+    return value!.toBigDecimal();
+  }
+
+  set initialQuoteDecimal(value: BigDecimal) {
+    this.set("initialQuoteDecimal", Value.fromBigDecimal(value));
+  }
+
+  get initialLiquidityDecimal(): BigDecimal {
+    let value = this.get("initialLiquidityDecimal");
+    return value!.toBigDecimal();
+  }
+
+  set initialLiquidityDecimal(value: BigDecimal) {
+    this.set("initialLiquidityDecimal", Value.fromBigDecimal(value));
+  }
+
+  get initialTau(): i32 {
+    let value = this.get("initialTau");
+    return value!.toI32();
+  }
+
+  set initialTau(value: i32) {
+    this.set("initialTau", Value.fromI32(value));
+  }
+
+  get swaps(): Array<string> {
+    let value = this.get("swaps");
+    return value!.toStringArray();
+  }
+
+  set swaps(value: Array<string>) {
+    this.set("swaps", Value.fromStringArray(value));
+  }
 }
 
 export class Engine extends Entity {
@@ -550,6 +615,16 @@ export class Position extends Entity {
     this.set("withdrawnQuoteDecimal", Value.fromBigDecimal(BigDecimal.zero()));
     this.set("invariantAtLastAllocate", Value.fromBigInt(BigInt.zero()));
     this.set("invariantAtCreation", Value.fromBigInt(BigInt.zero()));
+    this.set(
+      "initialLiquidityDecimal",
+      Value.fromBigDecimal(BigDecimal.zero())
+    );
+    this.set("initialTau", Value.fromI32(0));
+    this.set(
+      "initialUnderlyingDecimal",
+      Value.fromBigDecimal(BigDecimal.zero())
+    );
+    this.set("initialQuoteDecimal", Value.fromBigDecimal(BigDecimal.zero()));
   }
 
   save(): void {
@@ -720,6 +795,42 @@ export class Position extends Entity {
 
   set invariantAtCreation(value: BigInt) {
     this.set("invariantAtCreation", Value.fromBigInt(value));
+  }
+
+  get initialLiquidityDecimal(): BigDecimal {
+    let value = this.get("initialLiquidityDecimal");
+    return value!.toBigDecimal();
+  }
+
+  set initialLiquidityDecimal(value: BigDecimal) {
+    this.set("initialLiquidityDecimal", Value.fromBigDecimal(value));
+  }
+
+  get initialTau(): i32 {
+    let value = this.get("initialTau");
+    return value!.toI32();
+  }
+
+  set initialTau(value: i32) {
+    this.set("initialTau", Value.fromI32(value));
+  }
+
+  get initialUnderlyingDecimal(): BigDecimal {
+    let value = this.get("initialUnderlyingDecimal");
+    return value!.toBigDecimal();
+  }
+
+  set initialUnderlyingDecimal(value: BigDecimal) {
+    this.set("initialUnderlyingDecimal", Value.fromBigDecimal(value));
+  }
+
+  get initialQuoteDecimal(): BigDecimal {
+    let value = this.get("initialQuoteDecimal");
+    return value!.toBigDecimal();
+  }
+
+  set initialQuoteDecimal(value: BigDecimal) {
+    this.set("initialQuoteDecimal", Value.fromBigDecimal(value));
   }
 }
 
@@ -963,6 +1074,10 @@ export class Swap extends Entity {
     this.set("deltaOut", Value.fromBigInt(BigInt.zero()));
     this.set("amount", Value.fromBigInt(BigInt.zero()));
     this.set("timestamp", Value.fromI32(0));
+    this.set("tau", Value.fromI32(0));
+    this.set("totalUnderlyingDecimal", Value.fromBigDecimal(BigDecimal.zero()));
+    this.set("totalQuoteDecimal", Value.fromBigDecimal(BigDecimal.zero()));
+    this.set("totalLiquidityDecimal", Value.fromBigDecimal(BigDecimal.zero()));
   }
 
   save(): void {
@@ -1052,5 +1167,41 @@ export class Swap extends Entity {
 
   set timestamp(value: i32) {
     this.set("timestamp", Value.fromI32(value));
+  }
+
+  get tau(): i32 {
+    let value = this.get("tau");
+    return value!.toI32();
+  }
+
+  set tau(value: i32) {
+    this.set("tau", Value.fromI32(value));
+  }
+
+  get totalUnderlyingDecimal(): BigDecimal {
+    let value = this.get("totalUnderlyingDecimal");
+    return value!.toBigDecimal();
+  }
+
+  set totalUnderlyingDecimal(value: BigDecimal) {
+    this.set("totalUnderlyingDecimal", Value.fromBigDecimal(value));
+  }
+
+  get totalQuoteDecimal(): BigDecimal {
+    let value = this.get("totalQuoteDecimal");
+    return value!.toBigDecimal();
+  }
+
+  set totalQuoteDecimal(value: BigDecimal) {
+    this.set("totalQuoteDecimal", Value.fromBigDecimal(value));
+  }
+
+  get totalLiquidityDecimal(): BigDecimal {
+    let value = this.get("totalLiquidityDecimal");
+    return value!.toBigDecimal();
+  }
+
+  set totalLiquidityDecimal(value: BigDecimal) {
+    this.set("totalLiquidityDecimal", Value.fromBigDecimal(value));
   }
 }

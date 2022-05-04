@@ -21,6 +21,7 @@ type Pool @entity {
   strikeDecimal: BigDecimal!
   sigma: BigInt!
   sigmaDecimal: BigDecimal!
+  tau: Int!
   maturity: Int!
   gamma: BigInt!
   liquidity: BigInt!
@@ -38,12 +39,17 @@ type Pool @entity {
   feesCollectedQuoteDecimal: BigDecimal!
   invariant: BigInt!
   invariantStart: BigInt!
+  initialUnderlyingDecimal: BigDecimal!
+  initialQuoteDecimal: BigDecimal!
+  initialLiquidityDecimal: BigDecimal!
+  initialTau: Int!
+  swaps: [Swap!]! @derivedFrom(field: "pool")
 }
 
 type Engine @entity {
   id: ID!
   poolCount: Int!
-  pools: [Pool!]!
+  pools: [Pool!]! 
   underlyingToken: Token!
   txCount: Int!
   quoteToken: Token!
@@ -69,6 +75,10 @@ type Position @entity {
   withdrawnQuoteDecimal: BigDecimal!
   invariantAtLastAllocate: BigInt!
   invariantAtCreation: BigInt!
+  initialLiquidityDecimal: BigDecimal!
+  initialTau: Int!
+  initialUnderlyingDecimal: BigDecimal!
+  initialQuoteDecimal: BigDecimal!
 }
 
 type Allocate @entity {
@@ -104,4 +114,8 @@ type Swap @entity {
   deltaOut: BigInt!
   amount: BigInt!
   timestamp: Int!
+  tau: Int!
+  totalUnderlyingDecimal: BigDecimal!
+  totalQuoteDecimal: BigDecimal!
+  totalLiquidityDecimal: BigDecimal!
 }

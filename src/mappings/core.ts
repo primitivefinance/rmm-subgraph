@@ -60,6 +60,8 @@ export function handleSwap(event: Swap): void {
   let underlyingDecimals = underlyingContract.decimals();
   let quoteDecimals = quoteContract.decimals();
 
+  let reserves = engineContract.reserves(event.params.poolId);
+
   if (engine === null) {
     engine = new Engine(event.address.toHexString());
     engine.txCount = 0;
@@ -77,6 +79,7 @@ export function handleSwap(event: Swap): void {
 
   engine.txCount = engine.txCount + 1;
   pool.txCount = pool.txCount + 1;
+  pool.tau = pool.maturity - event.block.timestamp.toI32();
 
   if (event.params.riskyForStable) {
     pool.feesCollectedUnderlying = pool.feesCollectedUnderlying.plus(
@@ -109,6 +112,10 @@ export function handleSwap(event: Swap): void {
   swap.riskyForStable = event.params.riskyForStable;
   swap.deltaIn = event.params.deltaIn;
   swap.deltaOut = event.params.deltaOut;
+  swap.totalUnderlyingDecimal = toDecimal(reserves.value0, underlyingDecimals);
+  swap.totalQuoteDecimal = toDecimal(reserves.value1, quoteDecimals);
+  swap.totalLiquidityDecimal = toDecimal(pool.liquidity, 18);
+  swap.tau = pool.tau;
 
   let invariant = engineContract.try_invariantOf(event.params.poolId);
 
@@ -116,7 +123,7 @@ export function handleSwap(event: Swap): void {
     pool.invariant = invariant.value.div(BigInt.fromI32(2).pow(64));
   }
 
-  swap.save();
-  engine.save();
   pool.save();
+  engine.save();
+  swap.save();
 }
