@@ -474,13 +474,21 @@ export class Pool extends Entity {
     this.set("initialTau", Value.fromI32(value));
   }
 
-  get swaps(): Array<string> {
+  get swaps(): Array<string> | null {
     let value = this.get("swaps");
-    return value!.toStringArray();
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toStringArray();
+    }
   }
 
-  set swaps(value: Array<string>) {
-    this.set("swaps", Value.fromStringArray(value));
+  set swaps(value: Array<string> | null) {
+    if (!value) {
+      this.unset("swaps");
+    } else {
+      this.set("swaps", Value.fromStringArray(<Array<string>>value));
+    }
   }
 }
 

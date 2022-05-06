@@ -103,9 +103,9 @@ export function handleSwap(event: Swap): void {
     ).truncate(8);
   }
 
-  let swap = new SwapEntity(event.address.toHexString());
+  let swap = new SwapEntity(event.transaction.hash.toHexString() + "#" + event.params.poolId.toHexString());
   if (swap === null) {
-    swap = new SwapEntity(event.address.toHexString());
+    swap = new SwapEntity(event.transaction.hash.toHexString() + "#" + event.params.poolId.toHexString());
   }
 
   swap.pool = event.params.poolId.toHexString();

@@ -43,7 +43,7 @@ type Pool @entity {
   initialQuoteDecimal: BigDecimal!
   initialLiquidityDecimal: BigDecimal!
   initialTau: Int!
-  swaps: [Swap!]! @derivedFrom(field: "pool")
+  swaps: [Swap!] @derivedFrom(field: "pool")
 }
 
 type Engine @entity {
@@ -105,7 +105,7 @@ type Remove @entity {
   timestamp: Int!
 }
 
-type Swap @entity {
+type Swap @entity(immutable: true) {
   id: ID!
   pool: Pool!
   sender: String!
