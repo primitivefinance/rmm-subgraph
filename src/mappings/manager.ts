@@ -35,7 +35,6 @@ export function handleCreate(event: Create): void {
   pool.quoteToken = quoteId.toHexString();
   pool.underlyingToken = underlyingId.toHexString();
   pool.liquidity = event.params.delLiquidity;
-  pool.liquidityDecimal = toDecimal(pool.liquidity, 18).truncate(6);
   pool.txCount = 1;
   pool.strike = event.params.strike;
   pool.strikeDecimal = toDecimal(event.params.strike, quoteDecimals);
@@ -50,18 +49,9 @@ export function handleCreate(event: Create): void {
   pool.totalUnderlyingTokens = reserves.value0;
   pool.totalQuoteTokens = reserves.value1;
 
-  pool.initialUnderlyingDecimal = toDecimal(
-    pool.totalUnderlyingTokens,
-    underlyingDecimals
-  ).truncate(6);
-  pool.initialQuoteDecimal = toDecimal(
-    pool.totalQuoteTokens,
-    quoteDecimals
-  ).truncate(6);
-  pool.initialLiquidityDecimal = toDecimal(
-    event.params.delLiquidity,
-    18
-  ).truncate(6);
+  pool.initialUnderlying = pool.totalUnderlyingTokens;
+  pool.initialQuote = pool.totalQuoteTokens;
+  pool.initialLiquidity = event.params.delLiquidity;
   pool.initialTau = pool.tau;
 
   let position = new Position(event.params.payer.toHexString() + pool.id);
@@ -73,14 +63,6 @@ export function handleCreate(event: Create): void {
   position.liquidity = event.params.delLiquidity; // maybe minus minLiquidity, but that becomes hard because of how we get the reserves
   position.depositedUnderlyingToken = reserves.value0;
   position.depositedQuoteToken = reserves.value1;
-  position.depositedUnderlyingDecimal = toDecimal(
-    position.depositedUnderlyingToken,
-    underlyingDecimals
-  ).truncate(6);
-  position.depositedQuoteDecimal = toDecimal(
-    position.depositedQuoteToken,
-    quoteDecimals
-  ).truncate(6);
   position.withdrawnQuoteToken = BigInt.fromI32(0);
   position.withdrawnUnderlyingToken = BigInt.fromI32(0);
 
@@ -125,18 +107,8 @@ export function handleAllocate(event: Allocate): void {
 
   let reserves = engineContract.reserves(event.params.poolId);
   pool.totalUnderlyingTokens = reserves.value0;
-  pool.totalUnderlyingDecimal = toDecimal(
-    pool.totalUnderlyingTokens,
-    underlyingDecimals
-  ).truncate(6);
   pool.totalQuoteTokens = reserves.value1;
-  pool.totalQuoteDecimal = toDecimal(
-    pool.totalQuoteTokens,
-    quoteDecimals
-  ).truncate(6);
-
   pool.liquidity = pool.liquidity.plus(event.params.delLiquidity);
-  pool.liquidityDecimal = toDecimal(pool.liquidity, 18).truncate(6);
   pool.txCount = pool.txCount + 1;
 
   let position = Position.load(
@@ -153,22 +125,11 @@ export function handleAllocate(event: Allocate): void {
     position.quoteToken = quoteId.toHexString();
     // let minLiquidity = engineContract.MIN_LIQUIDITY()
     position.liquidity = event.params.delLiquidity; // maybe minus minLiquidity, but that becomes hard because of how we get the reserves
-    position.initialLiquidityDecimal = toDecimal(
-      event.params.delLiquidity,
-      18
-    ).truncate(6);
-    position.initialUnderlyingDecimal = toDecimal(
-      event.params.delRisky,
-      underlyingDecimals
-    ).truncate(6);
-    position.initialQuoteDecimal = toDecimal(
-      event.params.delStable,
-      quoteDecimals
-    ).truncate(6);
-
+    position.initialLiquidity = event.params.delLiquidity;
+    position.initialUnderlying = event.params.delRisky;
+    position.initialQuote = event.params.delStable;
     position.initialTau =
       pool.tau === 0 ? pool.maturity - event.block.timestamp.toI32() : pool.tau;
-    position.liquidityDecimal = toDecimal(position.liquidity, 18).truncate(6);
     if (!invariant.reverted) {
       position.invariantAtCreation = invariant.value.div(
         BigInt.fromI32(2).pow(64)
@@ -184,17 +145,9 @@ export function handleAllocate(event: Allocate): void {
   position.depositedUnderlyingToken = position.depositedUnderlyingToken.plus(
     event.params.delRisky
   );
-  position.depositedUnderlyingDecimal = toDecimal(
-    position.depositedUnderlyingToken,
-    underlyingDecimals
-  ).truncate(6);
   position.depositedQuoteToken = position.depositedQuoteToken.plus(
     event.params.delStable
   );
-  position.depositedQuoteDecimal = toDecimal(
-    position.depositedQuoteToken,
-    quoteDecimals
-  ).truncate(6);
 
   position.save();
   pool.save();
@@ -238,15 +191,7 @@ export function handleRemove(event: Remove): void {
   let reserves = engineContract.reserves(event.params.poolId);
   pool.totalUnderlyingTokens = reserves.value0;
   pool.totalQuoteTokens = reserves.value1;
-
-  pool.totalUnderlyingDecimal = toDecimal(
-    pool.totalUnderlyingTokens,
-    underlyingDecimals
-  );
-  pool.totalQuoteDecimal = toDecimal(pool.totalQuoteTokens, quoteDecimals);
-
   pool.liquidity = pool.liquidity.minus(event.params.delLiquidity);
-  pool.liquidityDecimal = toDecimal(pool.liquidity, 18).truncate(6);
   pool.txCount = pool.txCount + 1;
 
   let position = Position.load(
@@ -267,17 +212,9 @@ export function handleRemove(event: Remove): void {
   position.withdrawnQuoteToken = position.withdrawnQuoteToken.plus(
     event.params.delStable
   );
-  position.withdrawnQuoteDecimal = toDecimal(
-    position.withdrawnQuoteToken,
-    quoteDecimals
-  ).truncate(6);
   position.withdrawnUnderlyingToken = position.withdrawnUnderlyingToken.plus(
     event.params.delRisky
   );
-  position.withdrawnUnderlyingDecimal = toDecimal(
-    position.withdrawnUnderlyingToken,
-    underlyingDecimals
-  ).truncate(6);
   if (!invariant.reverted) {
     pool.invariant = invariant.value.div(BigInt.fromI32(2).pow(64));
   }

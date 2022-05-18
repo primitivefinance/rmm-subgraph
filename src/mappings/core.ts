@@ -87,34 +87,34 @@ export function handleSwap(event: Swap): void {
         event.params.deltaIn.times(pool.gamma).div(BigInt.fromI32(10).pow(4))
       )
     );
-    pool.feesCollectedUnderlyingDecimal = toDecimal(
-      pool.feesCollectedUnderlying,
-      underlyingDecimals
-    ).truncate(8);
   } else {
     pool.feesCollectedQuote = pool.feesCollectedQuote.plus(
       event.params.deltaIn.minus(
         event.params.deltaIn.times(pool.gamma).div(BigInt.fromI32(10).pow(4))
       )
     );
-    pool.feesCollectedQuoteDecimal = toDecimal(
-      pool.feesCollectedQuote,
-      quoteDecimals
-    ).truncate(8);
   }
 
-  let swap = new SwapEntity(event.transaction.hash.toHexString() + "#" + event.params.poolId.toHexString());
+  let swap = new SwapEntity(
+    event.transaction.hash.toHexString() +
+      "#" +
+      event.params.poolId.toHexString()
+  );
   if (swap === null) {
-    swap = new SwapEntity(event.transaction.hash.toHexString() + "#" + event.params.poolId.toHexString());
+    swap = new SwapEntity(
+      event.transaction.hash.toHexString() +
+        "#" +
+        event.params.poolId.toHexString()
+    );
   }
 
   swap.pool = event.params.poolId.toHexString();
   swap.riskyForStable = event.params.riskyForStable;
   swap.deltaIn = event.params.deltaIn;
   swap.deltaOut = event.params.deltaOut;
-  swap.totalUnderlyingDecimal = toDecimal(reserves.value0, underlyingDecimals);
-  swap.totalQuoteDecimal = toDecimal(reserves.value1, quoteDecimals);
-  swap.totalLiquidityDecimal = toDecimal(pool.liquidity, 18);
+  swap.totalUnderlying = reserves.value0;
+  swap.totalQuote = reserves.value1;
+  swap.totalLiquidity = pool.liquidity;
   swap.tau = pool.tau;
 
   let invariant = engineContract.try_invariantOf(event.params.poolId);

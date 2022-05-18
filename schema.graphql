@@ -25,23 +25,18 @@ type Pool @entity {
   maturity: Int!
   gamma: BigInt!
   liquidity: BigInt!
-  liquidityDecimal: BigDecimal!
   txCount: Int!
   totalUnderlyingTokens: BigInt!
-  totalUnderlyingDecimal: BigDecimal!
   totalQuoteTokens: BigInt!
-  totalQuoteDecimal: BigDecimal!
   liquidityProviderCount: Int!
   engine: Engine!
   feesCollectedUnderlying: BigInt!
-  feesCollectedUnderlyingDecimal: BigDecimal!
   feesCollectedQuote: BigInt!
-  feesCollectedQuoteDecimal: BigDecimal!
   invariant: BigInt!
   invariantStart: BigInt!
-  initialUnderlyingDecimal: BigDecimal!
-  initialQuoteDecimal: BigDecimal!
-  initialLiquidityDecimal: BigDecimal!
+  initialUnderlying: BigInt!
+  initialQuote: BigInt!
+  initialLiquidity: BigInt!
   initialTau: Int!
   swaps: [Swap!] @derivedFrom(field: "pool")
 }
@@ -49,7 +44,7 @@ type Pool @entity {
 type Engine @entity {
   id: ID!
   poolCount: Int!
-  pools: [Pool!]! 
+  pools: [Pool!]!
   underlyingToken: Token!
   txCount: Int!
   quoteToken: Token!
@@ -64,32 +59,24 @@ type Position @entity {
   underlyingToken: Token!
   quoteToken: Token!
   liquidity: BigInt!
-  liquidityDecimal: BigDecimal!
   depositedUnderlyingToken: BigInt!
-  depositedUnderlyingDecimal: BigDecimal!
   depositedQuoteToken: BigInt!
-  depositedQuoteDecimal: BigDecimal!
   withdrawnUnderlyingToken: BigInt!
-  withdrawnUnderlyingDecimal: BigDecimal!
   withdrawnQuoteToken: BigInt!
-  withdrawnQuoteDecimal: BigDecimal!
   invariantAtLastAllocate: BigInt!
   invariantAtCreation: BigInt!
-  initialLiquidityDecimal: BigDecimal!
+  initialLiquidity: BigInt!
   initialTau: Int!
-  initialUnderlyingDecimal: BigDecimal!
-  initialQuoteDecimal: BigDecimal!
+  initialUnderlying: BigInt!
+  initialQuote: BigInt!
 }
 
 type Allocate @entity {
   id: ID!
   pool: Pool!
   underlyingTokenAmount: BigInt!
-  underlyingTokenDecimal: BigDecimal!
   quoteTokenAmount: BigInt!
-  quoteTokenDecimal: BigDecimal!
   liquidityAmount: BigInt!
-  liquidityDecimal: BigDecimal!
   timestamp: Int!
 }
 
@@ -97,11 +84,8 @@ type Remove @entity {
   id: ID!
   pool: Pool!
   underlyingTokenAmount: BigInt!
-  underlyingTokenDecimal: BigDecimal!
   quoteTokenAmount: BigInt!
-  quoteTokenDecimal: BigDecimal!
   liquidityAmount: BigInt!
-  liquidityDecimal: BigDecimal!
   timestamp: Int!
 }
 
@@ -115,7 +99,7 @@ type Swap @entity(immutable: true) {
   amount: BigInt!
   timestamp: Int!
   tau: Int!
-  totalUnderlyingDecimal: BigDecimal!
-  totalQuoteDecimal: BigDecimal!
-  totalLiquidityDecimal: BigDecimal!
+  totalUnderlying: BigInt!
+  totalQuote: BigInt!
+  totalLiquidity: BigInt!
 }
