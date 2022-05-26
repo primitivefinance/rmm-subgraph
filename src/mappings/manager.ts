@@ -1,5 +1,10 @@
 import { BigInt } from "@graphprotocol/graph-ts";
-import { Pool, Position } from "../types/schema";
+import {
+  Pool,
+  Position,
+  Allocate as AllocateEntity,
+  Remove as RemoveEntity,
+} from "../types/schema";
 import { PrimitiveEngine as EngineABI } from "../types/PrimitiveEngine/PrimitiveEngine";
 import { ERC20 as TokenABI } from "../types/PrimitiveEngine/ERC20";
 import { toDecimal } from "../utils/decimals";
@@ -71,6 +76,21 @@ export function handleCreate(event: Create): void {
 }
 
 export function handleAllocate(event: Allocate): void {
+  let allocate = new AllocateEntity(
+    event.transaction.hash.toHexString() +
+      "#" +
+      event.params.poolId.toHexString()
+  );
+  if (allocate) {
+    allocate.underlyingTokenAmount = event.params.delRisky;
+    allocate.quoteTokenAmount = event.params.delStable;
+    allocate.liquidityAmount = event.params.delLiquidity;
+    allocate.pool = event.params.poolId.toHexString();
+    allocate.timestamp = event.block.timestamp.toI32();
+
+    allocate.save();
+  }
+
   let pool = Pool.load(event.params.poolId.toHexString());
   let engineContract = EngineABI.bind(event.params.engine);
 
@@ -154,6 +174,20 @@ export function handleAllocate(event: Allocate): void {
 }
 
 export function handleRemove(event: Remove): void {
+  let remove = new RemoveEntity(
+    event.transaction.hash.toHexString() +
+      "#" +
+      event.params.poolId.toHexString()
+  );
+  if (remove) {
+    remove.underlyingTokenAmount = event.params.delRisky;
+    remove.quoteTokenAmount = event.params.delStable;
+    remove.liquidityAmount = event.params.delLiquidity;
+    remove.pool = event.params.poolId.toHexString();
+    remove.timestamp = event.block.timestamp.toI32();
+
+    remove.save();
+  }
   let pool = Pool.load(event.params.poolId.toHexString());
   let engineContract = EngineABI.bind(event.params.engine);
 

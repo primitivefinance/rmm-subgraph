@@ -39,6 +39,8 @@ type Pool @entity {
   initialLiquidity: BigInt!
   initialTau: Int!
   swaps: [Swap!] @derivedFrom(field: "pool")
+  allocates: [Allocate!] @derivedFrom(field: "pool")
+  removes: [Remove!] @derivedFrom(field: "pool")
 }
 
 type Engine @entity {
@@ -102,4 +104,5 @@ type Swap @entity(immutable: true) {
   totalUnderlying: BigInt!
   totalQuote: BigInt!
   totalLiquidity: BigInt!
+  transactionHash: String!
 }

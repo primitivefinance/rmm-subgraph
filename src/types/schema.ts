@@ -428,6 +428,40 @@ export class Pool extends Entity {
       this.set("swaps", Value.fromStringArray(<Array<string>>value));
     }
   }
+
+  get allocates(): Array<string> | null {
+    let value = this.get("allocates");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toStringArray();
+    }
+  }
+
+  set allocates(value: Array<string> | null) {
+    if (!value) {
+      this.unset("allocates");
+    } else {
+      this.set("allocates", Value.fromStringArray(<Array<string>>value));
+    }
+  }
+
+  get removes(): Array<string> | null {
+    let value = this.get("removes");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toStringArray();
+    }
+  }
+
+  set removes(value: Array<string> | null) {
+    if (!value) {
+      this.unset("removes");
+    } else {
+      this.set("removes", Value.fromStringArray(<Array<string>>value));
+    }
+  }
 }
 
 export class Engine extends Entity {
@@ -902,6 +936,7 @@ export class Swap extends Entity {
     this.set("totalUnderlying", Value.fromBigInt(BigInt.zero()));
     this.set("totalQuote", Value.fromBigInt(BigInt.zero()));
     this.set("totalLiquidity", Value.fromBigInt(BigInt.zero()));
+    this.set("transactionHash", Value.fromString(""));
   }
 
   save(): void {
@@ -1027,5 +1062,14 @@ export class Swap extends Entity {
 
   set totalLiquidity(value: BigInt) {
     this.set("totalLiquidity", Value.fromBigInt(value));
+  }
+
+  get transactionHash(): string {
+    let value = this.get("transactionHash");
+    return value!.toString();
+  }
+
+  set transactionHash(value: string) {
+    this.set("transactionHash", Value.fromString(value));
   }
 }

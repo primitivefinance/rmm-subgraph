@@ -1,5 +1,11 @@
 import { BigInt } from "@graphprotocol/graph-ts";
-import { Engine, Pool, Swap as SwapEntity } from "../types/schema";
+import {
+  Engine,
+  Pool,
+  Swap as SwapEntity,
+  Allocate as AllocateEntity,
+  Remove as RemoveEntity,
+} from "../types/schema";
 import { ERC20 as TokenABI } from "../types/PrimitiveEngine/ERC20";
 import { PrimitiveEngine as EngineABI } from "../types/PrimitiveEngine/PrimitiveEngine";
 import {
@@ -10,6 +16,20 @@ import {
 import { toDecimal } from "../utils/decimals";
 
 export function handleAllocate(event: Allocate): void {
+  let allocate = new AllocateEntity(
+    event.transaction.hash.toHexString() +
+      "#" +
+      event.params.poolId.toHexString()
+  );
+  if (allocate) {
+    allocate.underlyingTokenAmount = event.params.delRisky;
+    allocate.quoteTokenAmount = event.params.delStable;
+    allocate.liquidityAmount = event.params.delLiquidity;
+    allocate.pool = event.params.poolId.toHexString();
+    allocate.timestamp = event.block.timestamp.toI32();
+
+    allocate.save();
+  }
   let engine = Engine.load(event.address.toHexString());
   let engineContract = EngineABI.bind(event.address);
 
@@ -29,6 +49,21 @@ export function handleAllocate(event: Allocate): void {
 }
 
 export function handleRemove(event: Remove): void {
+  let remove = new RemoveEntity(
+    event.transaction.hash.toHexString() +
+      "#" +
+      event.params.poolId.toHexString()
+  );
+  if (remove) {
+    remove.underlyingTokenAmount = event.params.delRisky;
+    remove.quoteTokenAmount = event.params.delStable;
+    remove.liquidityAmount = event.params.delLiquidity;
+    remove.pool = event.params.poolId.toHexString();
+    remove.timestamp = event.block.timestamp.toI32();
+
+    remove.save();
+  }
+
   let engine = Engine.load(event.address.toHexString());
   let engineContract = EngineABI.bind(event.address);
 
@@ -100,14 +135,16 @@ export function handleSwap(event: Swap): void {
       "#" +
       event.params.poolId.toHexString()
   );
+  swap.transactionHash = event.transaction.hash.toHexString();
   if (swap === null) {
     swap = new SwapEntity(
       event.transaction.hash.toHexString() +
         "#" +
         event.params.poolId.toHexString()
     );
+    swap.transactionHash = event.transaction.hash.toHexString();
   }
-
+  swap.sender = event.params.from.toHexString();
   swap.pool = event.params.poolId.toHexString();
   swap.riskyForStable = event.params.riskyForStable;
   swap.deltaIn = event.params.deltaIn;
