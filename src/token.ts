@@ -7,7 +7,7 @@ export function fetchTokenSymbol(tokenAddress: Address): string {
   // try types string and bytes32 for symbol
   let symbolValue = "unknown";
   let symbolResult = contract.try_symbol();
-  if (symbolResult.reverted) {
+  if (!symbolResult.reverted) {
     symbolValue = symbolResult.value;
   }
 

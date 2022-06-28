@@ -762,6 +762,8 @@ export class Allocate extends Entity {
     this.set("quoteTokenAmount", Value.fromBigInt(BigInt.zero()));
     this.set("liquidityAmount", Value.fromBigInt(BigInt.zero()));
     this.set("timestamp", Value.fromI32(0));
+    this.set("sender", Value.fromString(""));
+    this.set("transactionHash", Value.fromString(""));
   }
 
   save(): void {
@@ -834,6 +836,24 @@ export class Allocate extends Entity {
   set timestamp(value: i32) {
     this.set("timestamp", Value.fromI32(value));
   }
+
+  get sender(): string {
+    let value = this.get("sender");
+    return value!.toString();
+  }
+
+  set sender(value: string) {
+    this.set("sender", Value.fromString(value));
+  }
+
+  get transactionHash(): string {
+    let value = this.get("transactionHash");
+    return value!.toString();
+  }
+
+  set transactionHash(value: string) {
+    this.set("transactionHash", Value.fromString(value));
+  }
 }
 
 export class Remove extends Entity {
@@ -846,6 +866,8 @@ export class Remove extends Entity {
     this.set("quoteTokenAmount", Value.fromBigInt(BigInt.zero()));
     this.set("liquidityAmount", Value.fromBigInt(BigInt.zero()));
     this.set("timestamp", Value.fromI32(0));
+    this.set("sender", Value.fromString(""));
+    this.set("transactionHash", Value.fromString(""));
   }
 
   save(): void {
@@ -917,6 +939,24 @@ export class Remove extends Entity {
 
   set timestamp(value: i32) {
     this.set("timestamp", Value.fromI32(value));
+  }
+
+  get sender(): string {
+    let value = this.get("sender");
+    return value!.toString();
+  }
+
+  set sender(value: string) {
+    this.set("sender", Value.fromString(value));
+  }
+
+  get transactionHash(): string {
+    let value = this.get("transactionHash");
+    return value!.toString();
+  }
+
+  set transactionHash(value: string) {
+    this.set("transactionHash", Value.fromString(value));
   }
 }
 

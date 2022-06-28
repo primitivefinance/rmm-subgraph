@@ -87,6 +87,8 @@ export function handleAllocate(event: Allocate): void {
     allocate.liquidityAmount = event.params.delLiquidity;
     allocate.pool = event.params.poolId.toHexString();
     allocate.timestamp = event.block.timestamp.toI32();
+    allocate.sender = event.transaction.from.toHexString();
+    allocate.transactionHash = event.transaction.hash.toHexString();
 
     allocate.save();
   }
@@ -185,6 +187,8 @@ export function handleRemove(event: Remove): void {
     remove.liquidityAmount = event.params.delLiquidity;
     remove.pool = event.params.poolId.toHexString();
     remove.timestamp = event.block.timestamp.toI32();
+    remove.sender = event.transaction.from.toHexString();
+    remove.transactionHash = event.transaction.hash.toHexString();
 
     remove.save();
   }

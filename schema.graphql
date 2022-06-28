@@ -80,6 +80,8 @@ type Allocate @entity {
   quoteTokenAmount: BigInt!
   liquidityAmount: BigInt!
   timestamp: Int!
+  sender: String!
+  transactionHash: String!
 }
 
 type Remove @entity {
@@ -89,6 +91,8 @@ type Remove @entity {
   quoteTokenAmount: BigInt!
   liquidityAmount: BigInt!
   timestamp: Int!
+  sender: String!
+  transactionHash: String!
 }
 
 type Swap @entity(immutable: true) {
