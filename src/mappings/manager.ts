@@ -151,8 +151,6 @@ export function handleAllocate(event: Allocate): void {
     position.pool = pool.id;
     position.underlyingToken = underlyingId.toHexString();
     position.quoteToken = quoteId.toHexString();
-    // let minLiquidity = engineContract.MIN_LIQUIDITY()
-    position.liquidity = event.params.delLiquidity; // maybe minus minLiquidity, but that becomes hard because of how we get the reserves
     position.initialLiquidityDecimal = toDecimal(
       event.params.delLiquidity,
       18

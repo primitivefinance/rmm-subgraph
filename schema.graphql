@@ -75,6 +75,7 @@ type Position @entity {
   withdrawnQuoteDecimal: BigDecimal!
   invariantAtLastAllocate: BigInt!
   invariantAtCreation: BigInt!
+  invariantAtRemove: BigInt!
   initialLiquidityDecimal: BigDecimal!
   initialTau: Int!
   initialUnderlyingDecimal: BigDecimal!
