@@ -4,6 +4,7 @@ import {
   Position,
   Allocate as AllocateEntity,
   Remove as RemoveEntity,
+  PoolDayData,
 } from "../types/schema";
 import { PrimitiveEngine as EngineABI } from "../types/PrimitiveEngine/PrimitiveEngine";
 import { ERC20 as TokenABI } from "../types/PrimitiveEngine/ERC20";
@@ -13,6 +14,7 @@ import {
   Remove,
   Create,
 } from "../types/PrimitiveManager/PrimitiveManager";
+import { updatePoolDayData } from "./dayUpdates";
 
 // TODO: Move the engine mappings to core.ts
 
@@ -51,11 +53,11 @@ export function handleCreate(event: Create): void {
   pool.tau = pool.maturity - event.block.timestamp.toI32();
 
   let reserves = engineContract.reserves(event.params.poolId);
-  pool.totalUnderlyingTokens = reserves.value0;
-  pool.totalQuoteTokens = reserves.value1;
+  pool.reserveUnderlying = reserves.value0;
+  pool.reserveQuote = reserves.value1;
 
-  pool.initialUnderlying = pool.totalUnderlyingTokens;
-  pool.initialQuote = pool.totalQuoteTokens;
+  pool.initialUnderlying = pool.reserveUnderlying;
+  pool.initialQuote = pool.reserveQuote;
   pool.initialLiquidity = event.params.delLiquidity;
   pool.initialTau = pool.tau;
 
@@ -128,8 +130,8 @@ export function handleAllocate(event: Allocate): void {
   }
 
   let reserves = engineContract.reserves(event.params.poolId);
-  pool.totalUnderlyingTokens = reserves.value0;
-  pool.totalQuoteTokens = reserves.value1;
+  pool.reserveUnderlying = reserves.value0;
+  pool.reserveQuote = reserves.value1;
   pool.liquidity = pool.liquidity.plus(event.params.delLiquidity);
   pool.txCount = pool.txCount + 1;
 
@@ -173,6 +175,9 @@ export function handleAllocate(event: Allocate): void {
 
   position.save();
   pool.save();
+
+  let poolDayData = updatePoolDayData(event, pool);
+  if (poolDayData) poolDayData.save();
 }
 
 export function handleRemove(event: Remove): void {
@@ -227,8 +232,8 @@ export function handleRemove(event: Remove): void {
   }
 
   let reserves = engineContract.reserves(event.params.poolId);
-  pool.totalUnderlyingTokens = reserves.value0;
-  pool.totalQuoteTokens = reserves.value1;
+  pool.reserveUnderlying = reserves.value0;
+  pool.reserveQuote = reserves.value1;
   pool.liquidity = pool.liquidity.minus(event.params.delLiquidity);
   pool.txCount = pool.txCount + 1;
 
@@ -259,4 +264,9 @@ export function handleRemove(event: Remove): void {
 
   position.save();
   pool.save();
+
+  if (pool) {
+    let poolDayData = updatePoolDayData(event, pool);
+    if (poolDayData) poolDayData.save();
+  }
 }

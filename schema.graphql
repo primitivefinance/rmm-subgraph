@@ -28,8 +28,8 @@ type Pool @entity {
   underlyingToken: Token!
   quoteToken: Token!
   liquidity: BigInt!
-  totalUnderlyingTokens: BigInt!
-  totalQuoteTokens: BigInt!
+  reserveUnderlying: BigInt!
+  reserveQuote: BigInt!
 
   # Incremented Fields
   txCount: Int!
@@ -151,4 +151,53 @@ type Swap @entity(immutable: true) {
   totalUnderlying: BigInt!
   totalQuote: BigInt!
   totalLiquidity: BigInt!
+}
+
+type PoolHourData @entity {
+  id: ID!
+  date: Int!
+  pool: Pool!
+  underlyingToken: Token!
+  quoteToken: Token!
+
+  # reserves
+  reserveUnderlying: BigInt!
+  reserveQuote: BigInt!
+
+  # total supply for LP historical returns
+  liquidity: BigInt!
+
+  # derived liquidity
+  # reserveUSD: BigDecimal!
+
+  # volume stats
+  hourlyVolumeUnderlying: BigDecimal!
+  hourlyVolumeQuote: BigDecimal!
+  # dailyVolumeUSD: BigDecimal!
+  hourlyTxns: BigInt!
+}
+
+# Data accumulated and condensed into day stats for each exchange
+type PoolDayData @entity {
+  id: ID!
+  date: Int!
+  pool: Pool!
+  underlyingToken: Token!
+  quoteToken: Token!
+
+  # reserves
+  reserveUnderlying: BigInt!
+  reserveQuote: BigInt!
+
+  # total supply for LP historical returns
+  liquidity: BigInt!
+
+  # derived liquidity
+  # reserveUSD: BigDecimal!
+
+  # volume stats
+  dailyVolumeUnderlying: BigDecimal!
+  dailyVolumeQuote: BigDecimal!
+  # dailyVolumeUSD: BigDecimal!
+  dailyTxns: BigInt!
 }

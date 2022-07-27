@@ -134,10 +134,7 @@ export class Pool extends Entity {
     super();
     this.set("id", Value.fromString(id));
 
-    this.set("createdAtTimestamp", Value.fromI32(0));
-    this.set("createdAtBlockNumber", Value.fromI32(0));
-    this.set("underlyingToken", Value.fromString(""));
-    this.set("quoteToken", Value.fromString(""));
+    this.set("engine", Value.fromString(""));
     this.set("strike", Value.fromBigInt(BigInt.zero()));
     this.set("strikeDecimal", Value.fromBigDecimal(BigDecimal.zero()));
     this.set("sigma", Value.fromBigInt(BigInt.zero()));
@@ -145,15 +142,18 @@ export class Pool extends Entity {
     this.set("tau", Value.fromI32(0));
     this.set("maturity", Value.fromI32(0));
     this.set("gamma", Value.fromBigInt(BigInt.zero()));
+    this.set("underlyingToken", Value.fromString(""));
+    this.set("quoteToken", Value.fromString(""));
     this.set("liquidity", Value.fromBigInt(BigInt.zero()));
+    this.set("reserveUnderlying", Value.fromBigInt(BigInt.zero()));
+    this.set("reserveQuote", Value.fromBigInt(BigInt.zero()));
     this.set("txCount", Value.fromI32(0));
-    this.set("totalUnderlyingTokens", Value.fromBigInt(BigInt.zero()));
-    this.set("totalQuoteTokens", Value.fromBigInt(BigInt.zero()));
     this.set("liquidityProviderCount", Value.fromI32(0));
-    this.set("engine", Value.fromString(""));
     this.set("feesCollectedUnderlying", Value.fromBigInt(BigInt.zero()));
     this.set("feesCollectedQuote", Value.fromBigInt(BigInt.zero()));
     this.set("invariant", Value.fromBigInt(BigInt.zero()));
+    this.set("createdAtTimestamp", Value.fromI32(0));
+    this.set("createdAtBlockNumber", Value.fromI32(0));
     this.set("invariantStart", Value.fromBigInt(BigInt.zero()));
     this.set("initialUnderlying", Value.fromBigInt(BigInt.zero()));
     this.set("initialQuote", Value.fromBigInt(BigInt.zero()));
@@ -187,40 +187,13 @@ export class Pool extends Entity {
     this.set("id", Value.fromString(value));
   }
 
-  get createdAtTimestamp(): i32 {
-    let value = this.get("createdAtTimestamp");
-    return value!.toI32();
-  }
-
-  set createdAtTimestamp(value: i32) {
-    this.set("createdAtTimestamp", Value.fromI32(value));
-  }
-
-  get createdAtBlockNumber(): i32 {
-    let value = this.get("createdAtBlockNumber");
-    return value!.toI32();
-  }
-
-  set createdAtBlockNumber(value: i32) {
-    this.set("createdAtBlockNumber", Value.fromI32(value));
-  }
-
-  get underlyingToken(): string {
-    let value = this.get("underlyingToken");
+  get engine(): string {
+    let value = this.get("engine");
     return value!.toString();
   }
 
-  set underlyingToken(value: string) {
-    this.set("underlyingToken", Value.fromString(value));
-  }
-
-  get quoteToken(): string {
-    let value = this.get("quoteToken");
-    return value!.toString();
-  }
-
-  set quoteToken(value: string) {
-    this.set("quoteToken", Value.fromString(value));
+  set engine(value: string) {
+    this.set("engine", Value.fromString(value));
   }
 
   get strike(): BigInt {
@@ -286,6 +259,24 @@ export class Pool extends Entity {
     this.set("gamma", Value.fromBigInt(value));
   }
 
+  get underlyingToken(): string {
+    let value = this.get("underlyingToken");
+    return value!.toString();
+  }
+
+  set underlyingToken(value: string) {
+    this.set("underlyingToken", Value.fromString(value));
+  }
+
+  get quoteToken(): string {
+    let value = this.get("quoteToken");
+    return value!.toString();
+  }
+
+  set quoteToken(value: string) {
+    this.set("quoteToken", Value.fromString(value));
+  }
+
   get liquidity(): BigInt {
     let value = this.get("liquidity");
     return value!.toBigInt();
@@ -293,6 +284,24 @@ export class Pool extends Entity {
 
   set liquidity(value: BigInt) {
     this.set("liquidity", Value.fromBigInt(value));
+  }
+
+  get reserveUnderlying(): BigInt {
+    let value = this.get("reserveUnderlying");
+    return value!.toBigInt();
+  }
+
+  set reserveUnderlying(value: BigInt) {
+    this.set("reserveUnderlying", Value.fromBigInt(value));
+  }
+
+  get reserveQuote(): BigInt {
+    let value = this.get("reserveQuote");
+    return value!.toBigInt();
+  }
+
+  set reserveQuote(value: BigInt) {
+    this.set("reserveQuote", Value.fromBigInt(value));
   }
 
   get txCount(): i32 {
@@ -304,24 +313,6 @@ export class Pool extends Entity {
     this.set("txCount", Value.fromI32(value));
   }
 
-  get totalUnderlyingTokens(): BigInt {
-    let value = this.get("totalUnderlyingTokens");
-    return value!.toBigInt();
-  }
-
-  set totalUnderlyingTokens(value: BigInt) {
-    this.set("totalUnderlyingTokens", Value.fromBigInt(value));
-  }
-
-  get totalQuoteTokens(): BigInt {
-    let value = this.get("totalQuoteTokens");
-    return value!.toBigInt();
-  }
-
-  set totalQuoteTokens(value: BigInt) {
-    this.set("totalQuoteTokens", Value.fromBigInt(value));
-  }
-
   get liquidityProviderCount(): i32 {
     let value = this.get("liquidityProviderCount");
     return value!.toI32();
@@ -329,15 +320,6 @@ export class Pool extends Entity {
 
   set liquidityProviderCount(value: i32) {
     this.set("liquidityProviderCount", Value.fromI32(value));
-  }
-
-  get engine(): string {
-    let value = this.get("engine");
-    return value!.toString();
-  }
-
-  set engine(value: string) {
-    this.set("engine", Value.fromString(value));
   }
 
   get feesCollectedUnderlying(): BigInt {
@@ -365,6 +347,24 @@ export class Pool extends Entity {
 
   set invariant(value: BigInt) {
     this.set("invariant", Value.fromBigInt(value));
+  }
+
+  get createdAtTimestamp(): i32 {
+    let value = this.get("createdAtTimestamp");
+    return value!.toI32();
+  }
+
+  set createdAtTimestamp(value: i32) {
+    this.set("createdAtTimestamp", Value.fromI32(value));
+  }
+
+  get createdAtBlockNumber(): i32 {
+    let value = this.get("createdAtBlockNumber");
+    return value!.toI32();
+  }
+
+  set createdAtBlockNumber(value: i32) {
+    this.set("createdAtBlockNumber", Value.fromI32(value));
   }
 
   get invariantStart(): BigInt {
@@ -469,11 +469,11 @@ export class Engine extends Entity {
     super();
     this.set("id", Value.fromString(id));
 
-    this.set("poolCount", Value.fromI32(0));
     this.set("pools", Value.fromStringArray(new Array(0)));
     this.set("underlyingToken", Value.fromString(""));
-    this.set("txCount", Value.fromI32(0));
     this.set("quoteToken", Value.fromString(""));
+    this.set("poolCount", Value.fromI32(0));
+    this.set("txCount", Value.fromI32(0));
     this.set("createdAtTimestamp", Value.fromBigInt(BigInt.zero()));
     this.set("createdAtBlockNumber", Value.fromBigInt(BigInt.zero()));
   }
@@ -504,15 +504,6 @@ export class Engine extends Entity {
     this.set("id", Value.fromString(value));
   }
 
-  get poolCount(): i32 {
-    let value = this.get("poolCount");
-    return value!.toI32();
-  }
-
-  set poolCount(value: i32) {
-    this.set("poolCount", Value.fromI32(value));
-  }
-
   get pools(): Array<string> {
     let value = this.get("pools");
     return value!.toStringArray();
@@ -531,15 +522,6 @@ export class Engine extends Entity {
     this.set("underlyingToken", Value.fromString(value));
   }
 
-  get txCount(): i32 {
-    let value = this.get("txCount");
-    return value!.toI32();
-  }
-
-  set txCount(value: i32) {
-    this.set("txCount", Value.fromI32(value));
-  }
-
   get quoteToken(): string {
     let value = this.get("quoteToken");
     return value!.toString();
@@ -547,6 +529,24 @@ export class Engine extends Entity {
 
   set quoteToken(value: string) {
     this.set("quoteToken", Value.fromString(value));
+  }
+
+  get poolCount(): i32 {
+    let value = this.get("poolCount");
+    return value!.toI32();
+  }
+
+  set poolCount(value: i32) {
+    this.set("poolCount", Value.fromI32(value));
+  }
+
+  get txCount(): i32 {
+    let value = this.get("txCount");
+    return value!.toI32();
+  }
+
+  set txCount(value: i32) {
+    this.set("txCount", Value.fromI32(value));
   }
 
   get createdAtTimestamp(): BigInt {
@@ -757,13 +757,13 @@ export class Allocate extends Entity {
     super();
     this.set("id", Value.fromString(id));
 
+    this.set("timestamp", Value.fromI32(0));
+    this.set("sender", Value.fromString(""));
+    this.set("transactionHash", Value.fromString(""));
     this.set("pool", Value.fromString(""));
     this.set("underlyingTokenAmount", Value.fromBigInt(BigInt.zero()));
     this.set("quoteTokenAmount", Value.fromBigInt(BigInt.zero()));
     this.set("liquidityAmount", Value.fromBigInt(BigInt.zero()));
-    this.set("timestamp", Value.fromI32(0));
-    this.set("sender", Value.fromString(""));
-    this.set("transactionHash", Value.fromString(""));
   }
 
   save(): void {
@@ -792,6 +792,33 @@ export class Allocate extends Entity {
     this.set("id", Value.fromString(value));
   }
 
+  get timestamp(): i32 {
+    let value = this.get("timestamp");
+    return value!.toI32();
+  }
+
+  set timestamp(value: i32) {
+    this.set("timestamp", Value.fromI32(value));
+  }
+
+  get sender(): string {
+    let value = this.get("sender");
+    return value!.toString();
+  }
+
+  set sender(value: string) {
+    this.set("sender", Value.fromString(value));
+  }
+
+  get transactionHash(): string {
+    let value = this.get("transactionHash");
+    return value!.toString();
+  }
+
+  set transactionHash(value: string) {
+    this.set("transactionHash", Value.fromString(value));
+  }
+
   get pool(): string {
     let value = this.get("pool");
     return value!.toString();
@@ -827,33 +854,6 @@ export class Allocate extends Entity {
   set liquidityAmount(value: BigInt) {
     this.set("liquidityAmount", Value.fromBigInt(value));
   }
-
-  get timestamp(): i32 {
-    let value = this.get("timestamp");
-    return value!.toI32();
-  }
-
-  set timestamp(value: i32) {
-    this.set("timestamp", Value.fromI32(value));
-  }
-
-  get sender(): string {
-    let value = this.get("sender");
-    return value!.toString();
-  }
-
-  set sender(value: string) {
-    this.set("sender", Value.fromString(value));
-  }
-
-  get transactionHash(): string {
-    let value = this.get("transactionHash");
-    return value!.toString();
-  }
-
-  set transactionHash(value: string) {
-    this.set("transactionHash", Value.fromString(value));
-  }
 }
 
 export class Remove extends Entity {
@@ -861,13 +861,13 @@ export class Remove extends Entity {
     super();
     this.set("id", Value.fromString(id));
 
+    this.set("timestamp", Value.fromI32(0));
+    this.set("sender", Value.fromString(""));
+    this.set("transactionHash", Value.fromString(""));
     this.set("pool", Value.fromString(""));
     this.set("underlyingTokenAmount", Value.fromBigInt(BigInt.zero()));
     this.set("quoteTokenAmount", Value.fromBigInt(BigInt.zero()));
     this.set("liquidityAmount", Value.fromBigInt(BigInt.zero()));
-    this.set("timestamp", Value.fromI32(0));
-    this.set("sender", Value.fromString(""));
-    this.set("transactionHash", Value.fromString(""));
   }
 
   save(): void {
@@ -896,6 +896,33 @@ export class Remove extends Entity {
     this.set("id", Value.fromString(value));
   }
 
+  get timestamp(): i32 {
+    let value = this.get("timestamp");
+    return value!.toI32();
+  }
+
+  set timestamp(value: i32) {
+    this.set("timestamp", Value.fromI32(value));
+  }
+
+  get sender(): string {
+    let value = this.get("sender");
+    return value!.toString();
+  }
+
+  set sender(value: string) {
+    this.set("sender", Value.fromString(value));
+  }
+
+  get transactionHash(): string {
+    let value = this.get("transactionHash");
+    return value!.toString();
+  }
+
+  set transactionHash(value: string) {
+    this.set("transactionHash", Value.fromString(value));
+  }
+
   get pool(): string {
     let value = this.get("pool");
     return value!.toString();
@@ -931,33 +958,6 @@ export class Remove extends Entity {
   set liquidityAmount(value: BigInt) {
     this.set("liquidityAmount", Value.fromBigInt(value));
   }
-
-  get timestamp(): i32 {
-    let value = this.get("timestamp");
-    return value!.toI32();
-  }
-
-  set timestamp(value: i32) {
-    this.set("timestamp", Value.fromI32(value));
-  }
-
-  get sender(): string {
-    let value = this.get("sender");
-    return value!.toString();
-  }
-
-  set sender(value: string) {
-    this.set("sender", Value.fromString(value));
-  }
-
-  get transactionHash(): string {
-    let value = this.get("transactionHash");
-    return value!.toString();
-  }
-
-  set transactionHash(value: string) {
-    this.set("transactionHash", Value.fromString(value));
-  }
 }
 
 export class Swap extends Entity {
@@ -967,6 +967,7 @@ export class Swap extends Entity {
 
     this.set("pool", Value.fromString(""));
     this.set("sender", Value.fromString(""));
+    this.set("transactionHash", Value.fromString(""));
     this.set("riskyForStable", Value.fromBoolean(false));
     this.set("deltaIn", Value.fromBigInt(BigInt.zero()));
     this.set("deltaOut", Value.fromBigInt(BigInt.zero()));
@@ -976,7 +977,6 @@ export class Swap extends Entity {
     this.set("totalUnderlying", Value.fromBigInt(BigInt.zero()));
     this.set("totalQuote", Value.fromBigInt(BigInt.zero()));
     this.set("totalLiquidity", Value.fromBigInt(BigInt.zero()));
-    this.set("transactionHash", Value.fromString(""));
   }
 
   save(): void {
@@ -1021,6 +1021,15 @@ export class Swap extends Entity {
 
   set sender(value: string) {
     this.set("sender", Value.fromString(value));
+  }
+
+  get transactionHash(): string {
+    let value = this.get("transactionHash");
+    return value!.toString();
+  }
+
+  set transactionHash(value: string) {
+    this.set("transactionHash", Value.fromString(value));
   }
 
   get riskyForStable(): boolean {
@@ -1103,13 +1112,272 @@ export class Swap extends Entity {
   set totalLiquidity(value: BigInt) {
     this.set("totalLiquidity", Value.fromBigInt(value));
   }
+}
 
-  get transactionHash(): string {
-    let value = this.get("transactionHash");
+export class PoolHourData extends Entity {
+  constructor(id: string) {
+    super();
+    this.set("id", Value.fromString(id));
+
+    this.set("date", Value.fromI32(0));
+    this.set("pool", Value.fromString(""));
+    this.set("underlyingToken", Value.fromString(""));
+    this.set("quoteToken", Value.fromString(""));
+    this.set("reserveUnderlying", Value.fromBigInt(BigInt.zero()));
+    this.set("reserveQuote", Value.fromBigInt(BigInt.zero()));
+    this.set("liquidity", Value.fromBigInt(BigInt.zero()));
+    this.set("hourlyVolumeUnderlying", Value.fromBigDecimal(BigDecimal.zero()));
+    this.set("hourlyVolumeQuote", Value.fromBigDecimal(BigDecimal.zero()));
+    this.set("hourlyTxns", Value.fromBigInt(BigInt.zero()));
+  }
+
+  save(): void {
+    let id = this.get("id");
+    assert(id != null, "Cannot save PoolHourData entity without an ID");
+    if (id) {
+      assert(
+        id.kind == ValueKind.STRING,
+        "Cannot save PoolHourData entity with non-string ID. " +
+          'Considering using .toHex() to convert the "id" to a string.'
+      );
+      store.set("PoolHourData", id.toString(), this);
+    }
+  }
+
+  static load(id: string): PoolHourData | null {
+    return changetype<PoolHourData | null>(store.get("PoolHourData", id));
+  }
+
+  get id(): string {
+    let value = this.get("id");
     return value!.toString();
   }
 
-  set transactionHash(value: string) {
-    this.set("transactionHash", Value.fromString(value));
+  set id(value: string) {
+    this.set("id", Value.fromString(value));
+  }
+
+  get date(): i32 {
+    let value = this.get("date");
+    return value!.toI32();
+  }
+
+  set date(value: i32) {
+    this.set("date", Value.fromI32(value));
+  }
+
+  get pool(): string {
+    let value = this.get("pool");
+    return value!.toString();
+  }
+
+  set pool(value: string) {
+    this.set("pool", Value.fromString(value));
+  }
+
+  get underlyingToken(): string {
+    let value = this.get("underlyingToken");
+    return value!.toString();
+  }
+
+  set underlyingToken(value: string) {
+    this.set("underlyingToken", Value.fromString(value));
+  }
+
+  get quoteToken(): string {
+    let value = this.get("quoteToken");
+    return value!.toString();
+  }
+
+  set quoteToken(value: string) {
+    this.set("quoteToken", Value.fromString(value));
+  }
+
+  get reserveUnderlying(): BigInt {
+    let value = this.get("reserveUnderlying");
+    return value!.toBigInt();
+  }
+
+  set reserveUnderlying(value: BigInt) {
+    this.set("reserveUnderlying", Value.fromBigInt(value));
+  }
+
+  get reserveQuote(): BigInt {
+    let value = this.get("reserveQuote");
+    return value!.toBigInt();
+  }
+
+  set reserveQuote(value: BigInt) {
+    this.set("reserveQuote", Value.fromBigInt(value));
+  }
+
+  get liquidity(): BigInt {
+    let value = this.get("liquidity");
+    return value!.toBigInt();
+  }
+
+  set liquidity(value: BigInt) {
+    this.set("liquidity", Value.fromBigInt(value));
+  }
+
+  get hourlyVolumeUnderlying(): BigDecimal {
+    let value = this.get("hourlyVolumeUnderlying");
+    return value!.toBigDecimal();
+  }
+
+  set hourlyVolumeUnderlying(value: BigDecimal) {
+    this.set("hourlyVolumeUnderlying", Value.fromBigDecimal(value));
+  }
+
+  get hourlyVolumeQuote(): BigDecimal {
+    let value = this.get("hourlyVolumeQuote");
+    return value!.toBigDecimal();
+  }
+
+  set hourlyVolumeQuote(value: BigDecimal) {
+    this.set("hourlyVolumeQuote", Value.fromBigDecimal(value));
+  }
+
+  get hourlyTxns(): BigInt {
+    let value = this.get("hourlyTxns");
+    return value!.toBigInt();
+  }
+
+  set hourlyTxns(value: BigInt) {
+    this.set("hourlyTxns", Value.fromBigInt(value));
+  }
+}
+
+export class PoolDayData extends Entity {
+  constructor(id: string) {
+    super();
+    this.set("id", Value.fromString(id));
+
+    this.set("date", Value.fromI32(0));
+    this.set("pool", Value.fromString(""));
+    this.set("underlyingToken", Value.fromString(""));
+    this.set("quoteToken", Value.fromString(""));
+    this.set("reserveUnderlying", Value.fromBigInt(BigInt.zero()));
+    this.set("reserveQuote", Value.fromBigInt(BigInt.zero()));
+    this.set("liquidity", Value.fromBigInt(BigInt.zero()));
+    this.set("dailyVolumeUnderlying", Value.fromBigDecimal(BigDecimal.zero()));
+    this.set("dailyVolumeQuote", Value.fromBigDecimal(BigDecimal.zero()));
+    this.set("dailyTxns", Value.fromBigInt(BigInt.zero()));
+  }
+
+  save(): void {
+    let id = this.get("id");
+    assert(id != null, "Cannot save PoolDayData entity without an ID");
+    if (id) {
+      assert(
+        id.kind == ValueKind.STRING,
+        "Cannot save PoolDayData entity with non-string ID. " +
+          'Considering using .toHex() to convert the "id" to a string.'
+      );
+      store.set("PoolDayData", id.toString(), this);
+    }
+  }
+
+  static load(id: string): PoolDayData | null {
+    return changetype<PoolDayData | null>(store.get("PoolDayData", id));
+  }
+
+  get id(): string {
+    let value = this.get("id");
+    return value!.toString();
+  }
+
+  set id(value: string) {
+    this.set("id", Value.fromString(value));
+  }
+
+  get date(): i32 {
+    let value = this.get("date");
+    return value!.toI32();
+  }
+
+  set date(value: i32) {
+    this.set("date", Value.fromI32(value));
+  }
+
+  get pool(): string {
+    let value = this.get("pool");
+    return value!.toString();
+  }
+
+  set pool(value: string) {
+    this.set("pool", Value.fromString(value));
+  }
+
+  get underlyingToken(): string {
+    let value = this.get("underlyingToken");
+    return value!.toString();
+  }
+
+  set underlyingToken(value: string) {
+    this.set("underlyingToken", Value.fromString(value));
+  }
+
+  get quoteToken(): string {
+    let value = this.get("quoteToken");
+    return value!.toString();
+  }
+
+  set quoteToken(value: string) {
+    this.set("quoteToken", Value.fromString(value));
+  }
+
+  get reserveUnderlying(): BigInt {
+    let value = this.get("reserveUnderlying");
+    return value!.toBigInt();
+  }
+
+  set reserveUnderlying(value: BigInt) {
+    this.set("reserveUnderlying", Value.fromBigInt(value));
+  }
+
+  get reserveQuote(): BigInt {
+    let value = this.get("reserveQuote");
+    return value!.toBigInt();
+  }
+
+  set reserveQuote(value: BigInt) {
+    this.set("reserveQuote", Value.fromBigInt(value));
+  }
+
+  get liquidity(): BigInt {
+    let value = this.get("liquidity");
+    return value!.toBigInt();
+  }
+
+  set liquidity(value: BigInt) {
+    this.set("liquidity", Value.fromBigInt(value));
+  }
+
+  get dailyVolumeUnderlying(): BigDecimal {
+    let value = this.get("dailyVolumeUnderlying");
+    return value!.toBigDecimal();
+  }
+
+  set dailyVolumeUnderlying(value: BigDecimal) {
+    this.set("dailyVolumeUnderlying", Value.fromBigDecimal(value));
+  }
+
+  get dailyVolumeQuote(): BigDecimal {
+    let value = this.get("dailyVolumeQuote");
+    return value!.toBigDecimal();
+  }
+
+  set dailyVolumeQuote(value: BigDecimal) {
+    this.set("dailyVolumeQuote", Value.fromBigDecimal(value));
+  }
+
+  get dailyTxns(): BigInt {
+    let value = this.get("dailyTxns");
+    return value!.toBigInt();
+  }
+
+  set dailyTxns(value: BigInt) {
+    this.set("dailyTxns", Value.fromBigInt(value));
   }
 }
