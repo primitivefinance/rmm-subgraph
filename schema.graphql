@@ -13,10 +13,9 @@ type Token @entity {
 
 type Pool @entity {
   id: ID!
-  createdAtTimestamp: Int!
-  createdAtBlockNumber: Int!
-  underlyingToken: Token!
-  quoteToken: Token!
+
+  #Calibration parameters
+  engine: Engine!
   strike: BigInt!
   strikeDecimal: BigDecimal!
   sigma: BigInt!
@@ -24,35 +23,49 @@ type Pool @entity {
   tau: Int!
   maturity: Int!
   gamma: BigInt!
+
+  #Pool Token Breakdown
+  underlyingToken: Token!
+  quoteToken: Token!
   liquidity: BigInt!
-  liquidityDecimal: BigDecimal!
+  reserveUnderlying: BigInt!
+  reserveQuote: BigInt!
+
+  # Incremented Fields
   txCount: Int!
-  totalUnderlyingTokens: BigInt!
-  totalUnderlyingDecimal: BigDecimal!
-  totalQuoteTokens: BigInt!
-  totalQuoteDecimal: BigDecimal!
   liquidityProviderCount: Int!
-  engine: Engine!
   feesCollectedUnderlying: BigInt!
-  feesCollectedUnderlyingDecimal: BigDecimal!
   feesCollectedQuote: BigInt!
-  feesCollectedQuoteDecimal: BigDecimal!
   invariant: BigInt!
+
+  # Initialization Information
+  createdAtTimestamp: Int!
+  createdAtBlockNumber: Int!
   invariantStart: BigInt!
-  initialUnderlyingDecimal: BigDecimal!
-  initialQuoteDecimal: BigDecimal!
-  initialLiquidityDecimal: BigDecimal!
+  initialUnderlying: BigInt!
+  initialQuote: BigInt!
+  initialLiquidity: BigInt!
   initialTau: Int!
+
+  # Associated Transactions
   swaps: [Swap!] @derivedFrom(field: "pool")
+  allocates: [Allocate!] @derivedFrom(field: "pool")
+  removes: [Remove!] @derivedFrom(field: "pool")
 }
 
 type Engine @entity {
   id: ID!
-  poolCount: Int!
-  pools: [Pool!]! 
+
+  # Associated Entities
+  pools: [Pool!]!
   underlyingToken: Token!
-  txCount: Int!
   quoteToken: Token!
+
+  # Incremented Fields
+  poolCount: Int!
+  txCount: Int!
+
+  # Initialization Information
   createdAtTimestamp: BigInt!
   createdAtBlockNumber: BigInt!
 }
@@ -60,63 +73,132 @@ type Engine @entity {
 type Position @entity {
   id: ID!
   owner: Bytes!
+
+  # Associated Entities
   pool: Pool!
   underlyingToken: Token!
   quoteToken: Token!
+
+  # Position Breakdown
   liquidity: BigInt!
-  liquidityDecimal: BigDecimal!
   depositedUnderlyingToken: BigInt!
-  depositedUnderlyingDecimal: BigDecimal!
   depositedQuoteToken: BigInt!
-  depositedQuoteDecimal: BigDecimal!
   withdrawnUnderlyingToken: BigInt!
-  withdrawnUnderlyingDecimal: BigDecimal!
   withdrawnQuoteToken: BigInt!
-  withdrawnQuoteDecimal: BigDecimal!
+
+  # Incremented Fields
   invariantAtLastAllocate: BigInt!
+
+  # Initialization Information
   invariantAtCreation: BigInt!
   invariantAtRemove: BigInt!
   initialLiquidityDecimal: BigDecimal!
   initialTau: Int!
-  initialUnderlyingDecimal: BigDecimal!
-  initialQuoteDecimal: BigDecimal!
+  initialUnderlying: BigInt!
+  initialQuote: BigInt!
 }
 
 type Allocate @entity {
   id: ID!
-  pool: Pool!
-  underlyingTokenAmount: BigInt!
-  underlyingTokenDecimal: BigDecimal!
-  quoteTokenAmount: BigInt!
-  quoteTokenDecimal: BigDecimal!
-  liquidityAmount: BigInt!
-  liquidityDecimal: BigDecimal!
+
+  # Transaction Information
   timestamp: Int!
+  sender: String!
+  transactionHash: String!
+
+  # Associated Entities
+  pool: Pool!
+
+  # Transaction Breakdown
+  underlyingTokenAmount: BigInt!
+  quoteTokenAmount: BigInt!
+  liquidityAmount: BigInt!
 }
 
 type Remove @entity {
   id: ID!
-  pool: Pool!
-  underlyingTokenAmount: BigInt!
-  underlyingTokenDecimal: BigDecimal!
-  quoteTokenAmount: BigInt!
-  quoteTokenDecimal: BigDecimal!
-  liquidityAmount: BigInt!
-  liquidityDecimal: BigDecimal!
+
+  # Transaction Breakdown
   timestamp: Int!
+  sender: String!
+  transactionHash: String!
+
+  # Associated Entities
+  pool: Pool!
+
+  # Transaction Breakdown
+  underlyingTokenAmount: BigInt!
+  quoteTokenAmount: BigInt!
+  liquidityAmount: BigInt!
 }
 
 type Swap @entity(immutable: true) {
   id: ID!
+
+  # Associated Entities
   pool: Pool!
+
+  # Transaction Information
   sender: String!
+  transactionHash: String!
   riskyForStable: Boolean!
   deltaIn: BigInt!
   deltaOut: BigInt!
   amount: BigInt!
   timestamp: Int!
   tau: Int!
-  totalUnderlyingDecimal: BigDecimal!
-  totalQuoteDecimal: BigDecimal!
-  totalLiquidityDecimal: BigDecimal!
+
+  # Transaction Breakdown
+  totalUnderlying: BigInt!
+  totalQuote: BigInt!
+  totalLiquidity: BigInt!
+}
+
+type PoolHourData @entity {
+  id: ID!
+  date: Int!
+  pool: Pool!
+  underlyingToken: Token!
+  quoteToken: Token!
+
+  # reserves
+  reserveUnderlying: BigInt!
+  reserveQuote: BigInt!
+
+  # total supply for LP historical returns
+  liquidity: BigInt!
+
+  # derived liquidity
+  # reserveUSD: BigDecimal!
+
+  # volume stats
+  hourlyVolumeUnderlying: BigDecimal!
+  hourlyVolumeQuote: BigDecimal!
+  # dailyVolumeUSD: BigDecimal!
+  hourlyTxns: BigInt!
+}
+
+# Data accumulated and condensed into day stats for each exchange
+type PoolDayData @entity {
+  id: ID!
+  date: Int!
+  pool: Pool!
+  underlyingToken: Token!
+  quoteToken: Token!
+
+  # reserves
+  reserveUnderlying: BigInt!
+  reserveQuote: BigInt!
+
+  # total supply for LP historical returns
+  liquidity: BigInt!
+
+  # derived liquidity
+  # reserveUSD: BigDecimal!
+
+  # volume stats
+  dailyVolumeUnderlying: BigDecimal!
+  dailyVolumeQuote: BigDecimal!
+  # dailyVolumeUSD: BigDecimal!
+  dailyTxns: BigInt!
 }
