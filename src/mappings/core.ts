@@ -14,7 +14,7 @@ import {
   Remove,
 } from "../types/PrimitiveEngine/PrimitiveEngine";
 import { toDecimal } from "../utils/decimals";
-import { updatePoolDayData } from "./dayUpdates";
+import { updatePoolDayData, updatePoolHourData } from "./dayUpdates";
 
 export function handleAllocate(event: Allocate): void {
   let allocate = new AllocateEntity(
@@ -92,8 +92,10 @@ export function handleRemove(event: Remove): void {
 
   const pool = Pool.load(event.params.poolId.toHexString());
   if (pool) {
-    let poolDayData = updatePoolDayData(event, pool);
+    const poolDayData = updatePoolDayData(event, pool);
     if (poolDayData) poolDayData.save();
+    const poolHourData = updatePoolHourData(event, pool);
+    if (poolHourData) poolHourData.save();
   }
 
   engine.save();
@@ -182,60 +184,38 @@ export function handleSwap(event: Swap): void {
   swap.save();
 
   // update day entities
-  let poolDayData = updatePoolDayData(event, pool);
-  if (poolDayData) poolDayData.save();
+  const poolDayData = updatePoolDayData(event, pool);
+  if (poolDayData) {
+    // swap specific updating for pair
+    poolDayData.dailyVolumeUnderlying = poolDayData.dailyVolumeUnderlying.plus(
+      event.params.riskyForStable
+        ? event.params.deltaIn.toBigDecimal()
+        : BigInt.fromI32(0).toBigDecimal()
+    );
+    poolDayData.dailyVolumeQuote = poolDayData.dailyVolumeQuote.plus(
+      event.params.riskyForStable
+        ? BigInt.fromI32(0).toBigDecimal()
+        : event.params.deltaIn.toBigDecimal()
+    );
+    // TODO: Add USD priced volume back
+    // poolDayData.dailyVolumeUSD = poolDayData.dailyVolumeUSD.plus(
+    //   trackedAmountUSD
+    // );
+    poolDayData.save();
+  }
 
-  // let pairHourData = updatePairHourData(event);
-  // let token0DayData = updateTokenDayData(token0 as Token, event);
-  // let token1DayData = updateTokenDayData(token1 as Token, event);
-
-  // swap specific updating for pair
-  // poolDayData.dailyVolumeToken0 = poolDayData.dailyVolumeToken0.plus(
-  //   amount0Total
-  // );
-  // poolDayData.dailyVolumeToken1 = poolDayData.dailyVolumeToken1.plus(
-  //   amount1Total
-  // );
-  // poolDayData.dailyVolumeUSD = poolDayData.dailyVolumeUSD.plus(
-  //   trackedAmountUSD
-  // );
-  // poolDayData.save();
-
-  // // update hourly pair data
-  // if (pairHourData) {
-  //   pairHourData.hourlyVolumeToken0 = pairHourData.hourlyVolumeToken0.plus(
-  //     amount0Total
-  //   );
-  //   pairHourData.hourlyVolumeToken1 = pairHourData.hourlyVolumeToken1.plus(
-  //     amount1Total
-  //   );
-  //   pairHourData.hourlyVolumeUSD = pairHourData.hourlyVolumeUSD.plus(
-  //     trackedAmountUSD
-  //   );
-  //   pairHourData.save();
-  // }
-
-  // // swap specific updating for token0
-  // token0DayData.dailyVolumeToken = token0DayData.dailyVolumeToken.plus(
-  //   amount0Total
-  // );
-  // token0DayData.dailyVolumeETH = token0DayData.dailyVolumeETH.plus(
-  //   amount0Total.times(token0.derivedETH as BigDecimal)
-  // );
-  // token0DayData.dailyVolumeUSD = token0DayData.dailyVolumeUSD.plus(
-  //   amount0Total.times(token0.derivedETH as BigDecimal).times(bundle.ethPrice)
-  // );
-  // token0DayData.save();
-
-  // // swap specific updating
-  // token1DayData.dailyVolumeToken = token1DayData.dailyVolumeToken.plus(
-  //   amount1Total
-  // );
-  // token1DayData.dailyVolumeETH = token1DayData.dailyVolumeETH.plus(
-  //   amount1Total.times(token1.derivedETH as BigDecimal)
-  // );
-  // token1DayData.dailyVolumeUSD = token1DayData.dailyVolumeUSD.plus(
-  //   amount1Total.times(token1.derivedETH as BigDecimal).times(bundle.ethPrice)
-  // );
-  // token1DayData.save();
+  const poolHourData = updatePoolHourData(event, pool);
+  if (poolHourData) {
+    poolHourData.hourlyVolumeUnderlying = poolHourData.hourlyVolumeUnderlying.plus(
+      event.params.riskyForStable
+        ? event.params.deltaIn.toBigDecimal()
+        : BigInt.fromI32(0).toBigDecimal()
+    );
+    poolHourData.hourlyVolumeQuote = poolHourData.hourlyVolumeQuote.plus(
+      event.params.riskyForStable
+        ? BigInt.fromI32(0).toBigDecimal()
+        : event.params.deltaIn.toBigDecimal()
+    );
+    poolHourData.save();
+  }
 }

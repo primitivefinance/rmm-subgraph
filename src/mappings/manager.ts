@@ -14,7 +14,7 @@ import {
   Remove,
   Create,
 } from "../types/PrimitiveManager/PrimitiveManager";
-import { updatePoolDayData } from "./dayUpdates";
+import { updatePoolDayData, updatePoolHourData } from "./dayUpdates";
 
 // TODO: Move the engine mappings to core.ts
 
@@ -178,6 +178,8 @@ export function handleAllocate(event: Allocate): void {
 
   let poolDayData = updatePoolDayData(event, pool);
   if (poolDayData) poolDayData.save();
+  const poolHourData = updatePoolHourData(event, pool);
+  if (poolHourData) poolHourData.save();
 }
 
 export function handleRemove(event: Remove): void {
@@ -268,5 +270,7 @@ export function handleRemove(event: Remove): void {
   if (pool) {
     let poolDayData = updatePoolDayData(event, pool);
     if (poolDayData) poolDayData.save();
+    const poolHourData = updatePoolHourData(event, pool);
+    if (poolHourData) poolHourData.save();
   }
 }

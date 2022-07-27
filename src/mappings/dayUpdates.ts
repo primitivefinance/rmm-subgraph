@@ -1,5 +1,5 @@
 import { Address, BigDecimal, BigInt, ethereum } from "@graphprotocol/graph-ts";
-import { Pool, PoolDayData } from "../types/schema";
+import { Pool, PoolDayData, PoolHourData } from "../types/schema";
 
 export const ZERO_BI = BigInt.fromI32(0);
 export const ZERO_BD = BigInt.fromI32(0).toBigDecimal();
@@ -13,8 +13,8 @@ export function updatePoolDayData(
   let timestamp = event.block.timestamp.toI32();
   let dayID = timestamp / 86400;
   let dayStartTimestamp = dayID * 86400;
-  let dayPairID = event.address
-    .toHexString()
+  let dayPairID = pool.id
+    .toString()
     .concat("-")
     .concat(BigInt.fromI32(dayID).toString());
   let poolDayData = PoolDayData.load(dayPairID);
@@ -36,6 +36,43 @@ export function updatePoolDayData(
     poolDayData.dailyTxns = poolDayData.dailyTxns.plus(ONE_BI);
     poolDayData.save();
     return poolDayData;
+  }
+
+  return null;
+}
+
+export function updatePoolHourData(
+  event: ethereum.Event,
+  pool: Pool
+): PoolHourData | null {
+  let timestamp = event.block.timestamp.toI32();
+  let dayID = timestamp / 86400;
+  let dayStartTimestamp = dayID * 86400;
+  let hourStartTimestamp = (timestamp % 86400) / 3600;
+  let hourPairId = pool.id
+    .concat("-")
+    .concat(BigInt.fromI32(dayID).toString())
+    .concat("-")
+    .concat(BigInt.fromI64(hourStartTimestamp).toString());
+  let poolHourData = PoolHourData.load(hourPairId);
+  if (pool) {
+    if (poolHourData === null) {
+      poolHourData = new PoolHourData(hourPairId);
+      poolHourData.date = dayStartTimestamp;
+      poolHourData.underlyingToken = pool.underlyingToken;
+      poolHourData.quoteToken = pool.quoteToken;
+      poolHourData.pool = pool.id;
+      poolHourData.hourlyVolumeUnderlying = ZERO_BD;
+      poolHourData.hourlyVolumeQuote = ZERO_BD;
+      poolHourData.hourlyTxns = ZERO_BI;
+    }
+
+    poolHourData.liquidity = pool.liquidity;
+    poolHourData.reserveUnderlying = pool.reserveUnderlying;
+    poolHourData.reserveQuote = pool.reserveQuote;
+    poolHourData.hourlyTxns = poolHourData.hourlyTxns.plus(ONE_BI);
+    poolHourData.save();
+    return poolHourData;
   }
 
   return null;
