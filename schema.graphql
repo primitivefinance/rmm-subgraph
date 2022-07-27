@@ -91,7 +91,8 @@ type Position @entity {
 
   # Initialization Information
   invariantAtCreation: BigInt!
-  initialLiquidity: BigInt!
+  invariantAtRemove: BigInt!
+  initialLiquidityDecimal: BigDecimal!
   initialTau: Int!
   initialUnderlying: BigInt!
   initialQuote: BigInt!
