@@ -1,13 +1,13 @@
-specVersion: 0.0.2
+specVersion: 0.0.4
 schema:
   file: ./schema.graphql
 dataSources:
   - kind: ethereum/contract
     name: PrimitiveFactory
-    network: mainnet 
+    network: mainnet
     source:
       address: "0x5cA2D631a37B21E5de2BcB0CbB892D723A96b068"
-      abi: PrimitiveFactory 
+      abi: PrimitiveFactory
       startBlock: 14438065
     mapping:
       kind: ethereum/events
@@ -18,20 +18,20 @@ dataSources:
         - Engine
         - Token
       abis:
-        - name: PrimitiveFactory 
+        - name: PrimitiveFactory
           file: ./abis/PrimitiveFactory.json
         - name: ERC20
           file: ./abis/ERC20.json
       eventHandlers:
         - event: DeployEngine(indexed address,indexed address,indexed address,address)
-          handler: handleDeployEngine 
+          handler: handleDeployEngine
 
   - kind: ethereum/contract
     name: PrimitiveManager
     network: mainnet
     source:
       address: "0x54522dA62a15225C95b01bD61fF58b866C50471f"
-      abi: PrimitiveManager 
+      abi: PrimitiveManager
       startBlock: 14438065
     mapping:
       kind: ethereum/events
@@ -42,9 +42,9 @@ dataSources:
         - Pool
         - Token
       abis:
-        - name: PrimitiveManager 
+        - name: PrimitiveManager
           file: ./abis/PrimitiveManager.json
-        - name: PrimitiveEngine 
+        - name: PrimitiveEngine
           file: ./abis/PrimitiveEngine.json
         - name: ERC20
           file: ./abis/ERC20.json
@@ -58,21 +58,21 @@ dataSources:
 
 templates:
   - kind: ethereum/contract
-    name: PrimitiveEngine 
+    name: PrimitiveEngine
     network: mainnet
     source:
-      abi:  PrimitiveEngine
+      abi: PrimitiveEngine
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.5
       language: wasm/assemblyscript
       file: ./src/mappings/core.ts
       entities:
-        - Engine 
+        - Engine
         - Token
         - Pool
       abis:
-        - name: PrimitiveEngine 
+        - name: PrimitiveEngine
           file: ./abis/PrimitiveEngine.json
         - name: ERC20
           file: ./abis/ERC20.json
@@ -80,7 +80,7 @@ templates:
         - event: Allocate(indexed address,indexed address,indexed bytes32,uint256,uint256,uint256)
           handler: handleAllocate
         - event: Remove(indexed address,indexed bytes32,uint256,uint256,uint256)
-          handler: handleRemove 
+          handler: handleRemove
         - event: Deposit(indexed address,indexed address,uint256,uint256)
           handler: handleDeposit
         - event: Swap(indexed address,indexed address,indexed bytes32,bool,uint256,uint256)
